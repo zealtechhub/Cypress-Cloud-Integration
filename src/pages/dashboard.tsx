@@ -1,6 +1,6 @@
 import { Modal, Select } from "antd";
 import Button from "antd/lib/button";
-import { PlaceResult } from "google.maps";
+import { type PlaceResult } from "google.maps";
 import React from "react";
 import Autocomplete from "react-google-autocomplete";
 import { useForm } from "react-hook-form";
