@@ -1,10 +1,18 @@
 import { Modal, Select } from "antd";
 import Button from "antd/lib/button";
-import { type PlaceResult } from "google.maps";
 import React from "react";
 import Autocomplete from "react-google-autocomplete";
 import { useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
+
+interface PlaceResult {
+  geometry?: {
+    location?: {
+      lat: () => number;
+      lng: () => number;
+    };
+  };
+}
 
 function Dashboard() {
   const { handleSubmit, setValue, watch, getValues } = useForm<{
