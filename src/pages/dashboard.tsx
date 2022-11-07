@@ -48,7 +48,7 @@ function Dashboard() {
         deliverToCoordinates
       ) as number;
 
-    setValue("distance", distanceInMeters / 1000);
+    setValue("distance", distanceInMeters);
     setOpenModal(true);
   };
 
