@@ -1,4 +1,4 @@
-import { Modal, Select } from "antd";
+import { Divider, Modal, Select } from "antd";
 import Button from "antd/lib/button";
 import React from "react";
 import Autocomplete from "react-google-autocomplete";
@@ -20,16 +20,19 @@ function Dashboard() {
     deliverTo: PlaceResult;
     weightCharge: number;
     distance: number;
+    type: string;
   }>({
     defaultValues: {
       pickup: {},
       deliverTo: {},
       weightCharge: 1,
+      type: "address",
     },
   });
 
-  const { distance, weightCharge } = watch();
+  const { distance, weightCharge, type } = watch();
   const [openModal, setOpenModal] = React.useState<boolean>(false);
+  const [location, setLocation] = React.useState<string>();
 
   const submit = (data: { pickup: PlaceResult; deliverTo: PlaceResult }) => {
     const pickupCoordinates = {
@@ -52,9 +55,72 @@ function Dashboard() {
     setOpenModal(true);
   };
 
+  function getReverseGeocodingData(lat: number, lng: number) {
+    var latlng = new google.maps.LatLng(lat, lng);
+    var geocoder = new google.maps.Geocoder();
+    // @ts-ignore
+    geocoder.geocode({ latLng: latlng }, (results, status) => {
+      if (status !== google.maps.GeocoderStatus.OK) {
+        alert(status);
+      }
+      // This is checking to see if the Geoeode Status is OK before proceeding
+      if (status === google.maps.GeocoderStatus.OK) {
+        setLocation(results![0].formatted_address);
+      }
+    });
+  }
+
+  React.useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        let lat = position.coords.latitude;
+        let lng = position.coords.longitude;
+
+        getReverseGeocodingData(lat, lng);
+      },
+      function errorCallback(error) {
+        console.log(error);
+      }
+    );
+  }, []);
+
+  const Pick = React.useMemo(() => {
+    return (
+      <Autocomplete
+        className="w-full shadow-lg p-3 bg-transparent border border-solid border-blue-300 rounded-xl outline-none focus:ring ring-blue-400"
+        placeholder="Enter pick up location"
+        defaultValue={location}
+        options={{
+          types: [type],
+          componentRestrictions: {
+            country: "ng",
+          },
+        }}
+        onPlaceSelected={(place) => setValue("pickup", place)}
+      />
+    );
+  }, [location, setValue, type]);
+
+  const Deliver = React.useMemo(() => {
+    console.log("Deliver is called");
+    return (
+      <Autocomplete
+        className="w-full shadow-lg p-3 bg-transparent border border-solid border-blue-300 rounded-xl outline-none focus:ring ring-blue-400"
+        placeholder="Enter delivery location"
+        onPlaceSelected={(place) => setValue("deliverTo", place)}
+        options={{
+          types: [type],
+          componentRestrictions: {
+            country: "ng",
+          },
+        }}
+      />
+    );
+  }, [setValue, type]);
+
   return (
     <div className="dashboard-wrapper flex h-screen">
-      <div className="sidebar w-[300px] bg-white rounded-tr-xl h-full shadow-lg">
+      <div className="sidebar hidden md:block w-[300px] bg-[#cadee7] rounded-tr-xl h-full shadow-lg">
         <div className="content h-[85%] p-3 grid place-items-center">
           <div className="not-auth">Not signed in</div>
         </div>
@@ -78,31 +144,33 @@ function Dashboard() {
           onSubmit={handleSubmit(submit)}
           className="w-[500px] max-w-[90%] mx-auto flex flex-col gap-3 px-6 py-10 my-5 bg-white shadow-xl"
         >
+          {/* <div className="location-type">
+            <div className="label font-bold mb-2">Search By</div>
+            <div className="flex gap-3 flex-nowrap overflow-x-auto w-full">
+              {["address", "hall", "university", "hospital"].map((t) => (
+                <Button
+                  color="coral"
+                  type={type === t ? "primary" : "default"}
+                  className="chip capitalize !font-semibold !rounded-full !text-sm"
+                  onClick={() => setValue("type", t)}
+                >
+                  {t}
+                </Button>
+              ))}
+            </div>
+          </div> */}
+          <Divider dashed style={{ margin: 0 }} />
           <div className="form-group">
             <label htmlFor="deliverTo" className="block font-semibold mb-1">
               Pick Up Location
             </label>
-            <Autocomplete
-              className="w-full shadow-lg p-3 bg-transparent border border-solid border-blue-300 rounded-xl outline-none focus:ring ring-blue-400"
-              placeholder="Enter pick up location"
-              options={{
-                types: ["address"],
-              }}
-              onPlaceSelected={(place) => setValue("pickup", place)}
-            />
+            {Pick}
           </div>
           <div className="form-group">
             <label htmlFor="deliverTo" className="block font-semibold mb-1">
               Delivery Location
             </label>
-            <Autocomplete
-              className="w-full shadow-lg p-3 bg-transparent border border-solid border-blue-300 rounded-xl outline-none focus:ring ring-blue-400"
-              placeholder="Enter delivery location"
-              onPlaceSelected={(place) => setValue("deliverTo", place)}
-              options={{
-                types: ["address"],
-              }}
-            />
+            {Deliver}
           </div>
           <Button
             type="primary"
