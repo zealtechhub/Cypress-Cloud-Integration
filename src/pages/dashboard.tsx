@@ -57,22 +57,25 @@ function Dashboard() {
     setOpenModal(true);
   };
 
-  function getReverseGeocodingData(lat: number, lng: number) {
-    var latlng = new google.maps.LatLng(lat, lng);
-    var geocoder = new google.maps.Geocoder();
-    // @ts-ignore
-    geocoder.geocode({ latLng: latlng }, (results, status) => {
-      if (status !== google.maps.GeocoderStatus.OK) {
-        alert(status);
-      }
-      // This is checking to see if the Geoeode Status is OK before proceeding
-      if (status === google.maps.GeocoderStatus.OK) {
-        console.log({ results });
-        setLocation(results![0].formatted_address);
-        setValue("pickup", results![0]);
-      }
-    });
-  }
+  const getReverseGeocodingData = React.useCallback(
+    function getReverseGeocodingData(lat: number, lng: number) {
+      var latlng = new google.maps.LatLng(lat, lng);
+      var geocoder = new google.maps.Geocoder();
+      // @ts-ignore
+      geocoder.geocode({ latLng: latlng }, (results, status) => {
+        if (status !== google.maps.GeocoderStatus.OK) {
+          alert(status);
+        }
+        // This is checking to see if the Geo-code Status is OK before proceeding
+        if (status === google.maps.GeocoderStatus.OK) {
+          console.log({ results });
+          setLocation(results![0].formatted_address);
+          setValue("pickup", results![0]);
+        }
+      });
+    },
+    [setValue]
+  );
 
   React.useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -86,7 +89,7 @@ function Dashboard() {
         console.log(error);
       }
     );
-  }, []);
+  }, [getReverseGeocodingData]);
 
   const Pick = React.useMemo(() => {
     return (
