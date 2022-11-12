@@ -4,6 +4,7 @@ import React from "react";
 import Autocomplete from "react-google-autocomplete";
 import { useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
+import { motion } from "framer-motion";
 
 interface PlaceResult {
   geometry?: {
@@ -102,7 +103,6 @@ function Dashboard() {
   }, [location, setValue, type]);
 
   const Deliver = React.useMemo(() => {
-    console.log("Deliver is called");
     return (
       <Autocomplete
         className="w-full shadow-lg p-3 bg-transparent border border-solid border-blue-300 rounded-xl outline-none focus:ring ring-blue-400"
@@ -119,32 +119,24 @@ function Dashboard() {
   }, [setValue, type]);
 
   return (
-    <div className="dashboard-wrapper flex h-screen">
-      <div className="sidebar hidden md:block w-[300px] bg-[#cadee7] rounded-tr-xl h-full shadow-lg">
-        <div className="content h-[85%] p-3 grid place-items-center">
-          <div className="not-auth">Not signed in</div>
-        </div>
-        <div className="button-group flex justify-center p-3">
-          <NavLink to="/sign-in">
-            <Button className="mr-3" type="primary" ghost>
-              Sign in
-            </Button>
-          </NavLink>
-          <NavLink to="/sign-up">
-            <Button type="primary">Sign up</Button>
-          </NavLink>
-        </div>
-      </div>
-      <div className="form-container flex-grow p-3 grid place-items-center place-content-center">
-        <div className="form-label font-extrabold text-2xl text-center">
-          Courier Services
-        </div>
-        <form
-          action=""
-          onSubmit={handleSubmit(submit)}
-          className="w-[500px] max-w-[90%] mx-auto flex flex-col gap-3 px-6 py-10 my-5 bg-white shadow-xl"
+    <div className="dashboard-wrapper">
+      <Divider dashed style={{ margin: 0 }}>
+        <motion.div
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="form-label font-semibold text-sm"
         >
-          {/* <div className="location-type">
+          Let's give the service you want!!
+        </motion.div>
+      </Divider>
+      <motion.form
+        layoutId="form"
+        animate
+        action=""
+        onSubmit={handleSubmit(submit)}
+        className="w-[95%] rounded-2xl mx-auto flex flex-col gap-3 py-10 px-6 my-5 shadow-xl bg-[#f6fcff]"
+      >
+        {/* <div className="location-type">
             <div className="label font-bold mb-2">Search By</div>
             <div className="flex gap-3 flex-nowrap overflow-x-auto w-full">
               {["address", "hall", "university", "hospital"].map((t) => (
@@ -159,29 +151,64 @@ function Dashboard() {
               ))}
             </div>
           </div> */}
-          <Divider dashed style={{ margin: 0 }} />
-          <div className="form-group">
-            <label htmlFor="deliverTo" className="block font-semibold mb-1">
-              Pick Up Location
-            </label>
-            {Pick}
+        <Divider dashed style={{ margin: 0 }} />
+        <div className="form-group">
+          <label htmlFor="deliverTo" className="block font-semibold mb-1">
+            Pick Up Location
+          </label>
+          {Pick}
+        </div>
+        <div className="form-group">
+          <label htmlFor="deliverTo" className="block font-semibold mb-1">
+            Delivery Location
+          </label>
+          {Deliver}
+        </div>
+        <Button
+          type="primary"
+          htmlType="submit"
+          size="large"
+          className="mt-4 !rounded-lg !py-2 !h-auto !font-bold"
+        >
+          Submit Form
+        </Button>
+
+        <div className="">
+          <div className="my-5 text-center">
+            <div className="title font-bold text-xl">Authenticate</div>
+            <Divider style={{ margin: 0 }}>
+              <motion.div
+                initial={{ opacity: 0, y: 5 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="form-label font-semibold text-sm mt-3"
+              >
+                Explore Courier Features
+              </motion.div>
+            </Divider>
           </div>
-          <div className="form-group">
-            <label htmlFor="deliverTo" className="block font-semibold mb-1">
-              Delivery Location
-            </label>
-            {Deliver}
+          <div className="wrap button-group flex justify-center p-3">
+            <NavLink to="/sign-in">
+              <Button
+                className="mr-3 !rounded-full"
+                type="primary"
+                htmlType="button"
+                ghost
+              >
+                Sign in
+              </Button>
+            </NavLink>
+            <NavLink to="/sign-up">
+              <Button
+                type="primary"
+                htmlType="button"
+                className="!rounded-full !bg-purple-900 !border-purple-900"
+              >
+                Sign up
+              </Button>
+            </NavLink>
           </div>
-          <Button
-            type="primary"
-            htmlType="submit"
-            size="large"
-            className="mt-4 !rounded-lg !py-2 !h-auto !font-bold"
-          >
-            Submit Form
-          </Button>
-        </form>
-      </div>
+        </div>
+      </motion.form>
       <Modal
         title="Complete Request"
         centered

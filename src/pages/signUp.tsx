@@ -3,6 +3,8 @@ import Button from "antd/lib/button";
 import { useForm } from "react-hook-form";
 import Input from "antd/lib/input";
 import { NavLink } from "react-router-dom";
+import { Divider } from "antd";
+import { motion } from "framer-motion";
 
 function Register() {
   const { handleSubmit, setValue } = useForm({
@@ -18,15 +20,29 @@ function Register() {
   };
 
   return (
-    <div className="sign-in-wrapper p-3">
-      <form
+    <motion.div
+      // initial={{ scale: 0.5 }}
+      // animate={{ scale: 1 }}
+      exit={{ opacity: 0, transition: { duration: 1 } }}
+      variants={{ visible: { transition: { staggerChildren: 0.3 } } }}
+      className="sign-up-wrapper"
+    >
+      <Divider dashed style={{ margin: 0 }}>
+        <motion.div
+          initial={{ opacity: 0, y: 5 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="form-label font-semibold text-sm"
+        >
+          Sign up for Courier Service
+        </motion.div>
+      </Divider>
+      <motion.form
+        animate
+        layoutId="form"
         action=""
         onSubmit={handleSubmit(submit)}
-        className="w-[360px] max-w-[90%] mx-auto flex flex-col gap-3 px-6 py-10 my-5 bg-white shadow-xl"
+        className="w-[95%] rounded-2xl mx-auto flex flex-col gap-3 py-10 px-6 my-5 shadow-xl bg-[#f6fcff]"
       >
-        <div className="form-label font-extrabold text-2xl text-center">
-          Sign up for Courier Service
-        </div>
         <div className="form-group">
           <label htmlFor="deliverTo" className="block font-semibold mb-1">
             Name
@@ -69,14 +85,24 @@ function Register() {
         >
           Sign up
         </Button>
-        <div className="flex gap-3">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{
+            opacity: 1,
+            y: 0,
+            transition: { delay: 0.3, staggerChildren: 0.3 },
+          }}
+          className="flex gap-3"
+        >
           Already have an account ?
           <NavLink to={"/sign-in"} className="inline">
-            <span className="inline font-semibold">Sign in</span>
+            <motion.span animate className="inline font-semibold">
+              Sign In
+            </motion.span>
           </NavLink>
-        </div>
-      </form>
-    </div>
+        </motion.div>
+      </motion.form>
+    </motion.div>
   );
 }
 
