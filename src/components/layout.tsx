@@ -8,9 +8,7 @@ import Dashboard from "src/pages/dashboard";
 import Login from "../pages/signIn";
 import Register from "../pages/signUp";
 import Profile from "../pages/profile";
-import { Divider, Modal, Select } from "antd";
-import Button from "antd/lib/button";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Layout() {
   const element = useRoutes([
