@@ -36,6 +36,7 @@ function Dashboard() {
   const [location, setLocation] = React.useState<string>();
 
   const submit = (data: { pickup: PlaceResult; deliverTo: PlaceResult }) => {
+    console.log({ data });
     const pickupCoordinates = {
       lat: data.pickup.geometry?.location?.lat() as number,
       lng: data.pickup.geometry?.location?.lng() as number,
@@ -66,7 +67,9 @@ function Dashboard() {
       }
       // This is checking to see if the Geoeode Status is OK before proceeding
       if (status === google.maps.GeocoderStatus.OK) {
+        console.log({ results });
         setLocation(results![0].formatted_address);
+        setValue("pickup", results![0]);
       }
     });
   }
@@ -117,6 +120,8 @@ function Dashboard() {
       />
     );
   }, [setValue, type]);
+
+  console.log({ openModal });
 
   return (
     <div className="dashboard-wrapper">
