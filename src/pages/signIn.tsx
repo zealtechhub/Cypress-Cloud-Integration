@@ -7,16 +7,15 @@ import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 
 function Login() {
-  const { handleSubmit, setValue } = useForm({
+  const [tokenSent, setTokenSent] = React.useState(false);
+  const { handleSubmit, setValue, setError } = useForm({
     defaultValues: {
       phone_email: "",
       token: "",
     },
   });
 
-  const submit = (data: object) => {
-    console.log({ data });
-  };
+  const submit = (data: object) => {};
 
   const sendToken = () => {};
 
@@ -44,18 +43,24 @@ function Login() {
           <label htmlFor="deliverTo" className="block font-semibold mb-1">
             Phone number
           </label>
-          <Input
-            placeholder="Enter Phone no. or Email"
-            addonBefore={"+234"}
-            addonAfter={
-              <Button type="primary" size="small" disabled onClick={sendToken}>
-                Get Token
-              </Button>
-            }
-            size="large"
-            defaultValue={100}
-            onChange={(e) => setValue("phone_email", e.target.value)}
-          />
+          <div className="flex justify-end flex-col gap-3">
+            <Input
+              placeholder="Enter Phone no. or Email"
+              addonBefore={"+234"}
+              size="large"
+              defaultValue={100}
+              onChange={(e) => setValue("phone_email", e.target.value)}
+            />
+            <Button
+              type="primary"
+              size="small"
+              disabled={!tokenSent}
+              className="rounded-lg w-max"
+              onClick={sendToken}
+            >
+              Get Token
+            </Button>
+          </div>
         </div>
         <div className="form-group">
           <label htmlFor="deliverTo" className="block font-semibold mb-1">
