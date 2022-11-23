@@ -2,37 +2,31 @@ import React from "react";
 import Button from "antd/lib/button";
 import { useForm } from "react-hook-form";
 import Input from "antd/lib/input";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { Divider, message } from "antd";
 import { motion } from "framer-motion";
 
 type FormDataType = {
-  name: string;
+  Name: string;
   email: string;
-  phone: string;
+  Phone_num: string;
 };
 
 type Keys = keyof FormDataType;
 
 function Register() {
-  const controller = new AbortController();
+  // const controller = new AbortController();
   const [loading, setLoading] = React.useState(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const navigate = useNavigate();
   const {
     handleSubmit,
     setValue,
     setError,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-    },
-  });
+  } = useForm<FormDataType>();
 
   const submit = async (data: FormDataType) => {
-    console.log({ data });
     if (loading)
       return messageApi.open({
         type: "info",
@@ -41,7 +35,7 @@ function Register() {
 
     setLoading(true);
 
-    if (!data.name || !data.email || !data.phone) {
+    if (!data.Name || !data.email || !data.Phone_num) {
       (Object.keys(data) as [Keys]).forEach((key, i) => {
         if (!data[key]) {
           setError(key, { message: "Field is required" });
@@ -60,25 +54,32 @@ function Register() {
 
     const send = await fetch("https://node.wizarphics.com/users/create/", {
       method: "POST",
-      body: JSON.stringify({
-        ...data,
-        token: 123456,
-        token_expired: 10,
-      }),
+      body: JSON.stringify(data),
       headers: {
-        "Content-Type": "application/json",
+        Accept: "application/json",
       },
-      signal: controller.signal,
+      redirect: "follow",
     });
 
     const response = await send.json();
-    console.log({ response });
-    setLoading(false);
+
+    messageApi.open({
+      type: response.success ? "success" : "error",
+      content: response.success
+        ? "Account Created Successfully"
+        : response.message,
+    });
+
+    if (response.success) {
+      setTimeout(() => {
+        navigate("/sign-in", { replace: true });
+      }, 3000);
+    } else setLoading(false);
   };
 
-  React.useEffect(() => {
-    return () => controller.abort();
-  }, []);
+  // React.useEffect(() => {
+  //   return () => controller.abort();
+  // }, []);
 
   return (
     <>
@@ -90,6 +91,11 @@ function Register() {
         variants={{ visible: { transition: { staggerChildren: 0.3 } } }}
         className="sign-up-wrapper"
       >
+        <Link to="/">
+          <div className="form-label font-[1000] text-purple-900 text-2xl text-center">
+            Courier
+          </div>
+        </Link>
         <Divider dashed style={{ margin: 0 }}>
           <motion.div
             initial={{ opacity: 0, y: 5 }}
@@ -113,8 +119,8 @@ function Register() {
             <Input
               placeholder="Enter your name"
               size="large"
-              status={errors.name ? "error" : undefined}
-              onChange={(e) => setValue("name", e.target.value)}
+              status={errors.Name ? "error" : undefined}
+              onChange={(e) => setValue("Name", e.target.value)}
             />
           </div>
           <div className="form-group">
@@ -125,8 +131,8 @@ function Register() {
               placeholder="Enter Phone no."
               addonBefore={"+234"}
               size="large"
-              status={errors.phone ? "error" : undefined}
-              onChange={(e) => setValue("phone", e.target.value)}
+              status={errors.Phone_num ? "error" : undefined}
+              onChange={(e) => setValue("Phone_num", e.target.value)}
             />
           </div>
           <div className="form-group">

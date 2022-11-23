@@ -1,10 +1,11 @@
-import { Divider, Modal, Select } from "antd";
+import { Avatar, Divider, Modal, Select } from "antd";
 import Button from "antd/lib/button";
 import React from "react";
 import Autocomplete from "react-google-autocomplete";
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
+import stringToColor from "src/lib/stringToColor";
 
 interface PlaceResult {
   geometry?: {
@@ -124,6 +125,11 @@ function Dashboard() {
 
   return (
     <div className="dashboard-wrapper">
+      <Link to="/">
+        <div className="form-label font-[1000] text-purple-900 text-2xl text-center">
+          Courier
+        </div>
+      </Link>
       <Divider dashed style={{ margin: 0 }}>
         <motion.div
           initial={{ opacity: 0, y: 5 }}
@@ -133,6 +139,14 @@ function Dashboard() {
           Let's give the service you want!!
         </motion.div>
       </Divider>
+      <div className="profile-wrap bg-sky-200/30 rounded-xl w-[300px] max-w-full mx-auto px-5 py-2 mt-4">
+        <Link to={"/profile"}>
+          <Avatar src={""} className={`bg-[${stringToColor("Timi James")}]`}>
+            T
+          </Avatar>
+        </Link>
+        <span className="name font-bold text-gray-800 ml-2">Timi James</span>
+      </div>
       <motion.form
         layoutId="form"
         animate
