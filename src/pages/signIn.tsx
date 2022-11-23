@@ -16,7 +16,7 @@ type SignFormData = {
 function Login() {
   const [tokenSent, setTokenSent] = React.useState(false);
   const [messageApi, contextHolder] = message.useMessage();
-  const { setValue, setError, getValues } = useForm<SignFormData>();
+  const { setValue, getValues } = useForm<SignFormData>();
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -118,8 +118,9 @@ function Login() {
             htmlType="submit"
             size="large"
             className="mt-4 !rounded-lg !py-2 !h-auto !font-bold"
+            onClick={verifyToken}
           >
-            Sign in
+            Verify
           </Button>
           <motion.div
             initial={{ opacity: 0, y: 20 }}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Divider, Space, Tag } from "antd";
+import { Avatar, Divider, Space } from "antd";
 import Button from "antd/lib/button";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 // import { motion } from "framer-motion";
