@@ -124,10 +124,16 @@ function Dashboard() {
   }, [setValue, type]);
 
   return (
-    <div className="dashboard-wrapper">
+    <motion.div
+      animate={{ x: 0 }}
+      initial={{ x: 500 }}
+      exit={{ position: "absolute", left: "100%" }}
+      transition={{ type: "just" }}
+      className="dashboard-wrapper py-5"
+    >
       <Link to="/">
-        <div className="form-label font-[1000] text-purple-900 text-2xl text-center">
-          Courier
+        <div className="form-label font-[1000] text-primary/50 text-2xl text-center">
+          Reech
         </div>
       </Link>
       <Divider dashed style={{ margin: 0 }}>
@@ -139,7 +145,7 @@ function Dashboard() {
           Let's give the service you want!!
         </motion.div>
       </Divider>
-      <div className="profile-wrap bg-sky-200/30 rounded-xl w-[300px] max-w-full mx-auto px-5 py-2 mt-4">
+      <div className="profile-wrap bg-primary/10 rounded-xl w-[300px] max-w-full mx-auto px-5 py-2 mt-4">
         <Link to={"/profile"}>
           <Avatar src={""} className={`bg-[${stringToColor("Timi James")}]`}>
             T
@@ -148,9 +154,8 @@ function Dashboard() {
         <span className="name font-bold text-gray-800 ml-2">Timi James</span>
       </div>
       <motion.form
-        layoutId="form"
-        animate
-        action=""
+        initial={{ opacity: 0.6, y: 100 }}
+        animate={{ opacity: 1, y: 0 }}
         onSubmit={handleSubmit(submit)}
         className="w-[95%] rounded-2xl mx-auto flex flex-col gap-3 py-10 px-6 my-5 shadow-xl bg-[#f6fcff]"
       >
@@ -190,42 +195,6 @@ function Dashboard() {
         >
           Submit Form
         </Button>
-
-        <div className="">
-          <div className="my-5 text-center">
-            <div className="title font-bold text-xl">Authenticate</div>
-            <Divider style={{ margin: 0 }}>
-              <motion.div
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="form-label font-semibold text-sm mt-3"
-              >
-                Explore Courier Features
-              </motion.div>
-            </Divider>
-          </div>
-          <div className="wrap button-group flex justify-center p-3">
-            <NavLink to="/sign-in">
-              <Button
-                className="mr-3 !rounded-full"
-                type="primary"
-                htmlType="button"
-                ghost
-              >
-                Sign in
-              </Button>
-            </NavLink>
-            <NavLink to="/sign-up">
-              <Button
-                type="primary"
-                htmlType="button"
-                className="!rounded-full !bg-purple-900 !border-purple-900"
-              >
-                Sign up
-              </Button>
-            </NavLink>
-          </div>
-        </div>
       </motion.form>
       <Modal
         title="Complete Request"
@@ -276,7 +245,7 @@ function Dashboard() {
           </span>
         </div>
       </Modal>
-    </div>
+    </motion.div>
   );
 }
 

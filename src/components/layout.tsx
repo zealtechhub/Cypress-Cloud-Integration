@@ -4,13 +4,18 @@ import { useLocation, useRoutes } from "react-router";
 import { AnimatePresence } from "framer-motion";
 
 // Pages
-import Dashboard from "src/pages/dashboard";
+import Home from "src/pages/Home";
 import Login from "../pages/signIn";
-import Register from "../pages/signUp";
 import Profile from "../pages/profile";
+import Dashboard from "src/pages/dashboard";
+import CreateAccount from "../pages/CreateAccount";
 
 function Layout() {
   const element = useRoutes([
+    {
+      path: "/",
+      element: <Home />,
+    },
     {
       path: "/",
       element: <Dashboard />,
@@ -20,8 +25,8 @@ function Layout() {
       element: <Login />,
     },
     {
-      path: "sign-up",
-      element: <Register />,
+      path: "create-account/*",
+      element: <CreateAccount />,
     },
     {
       path: "profile",
@@ -34,8 +39,8 @@ function Layout() {
 
   return (
     <AnimatePresence mode="wait">
-      <div className="app-wrapper grid h-screen overflow-hidden place-items-center">
-        <div className="w-[430px] max-h-full md:h-[600px] max-w-[100vw] form-container p-3 bg-white rounded-2xl py-3 shadow-lg overflow-auto">
+      <div className="app-container grid h-screen overflow-hidden place-items-center">
+        <div className="app-wrapper w-screen sm:w-[430px] h-screen max-h-full sm:h-[600px] max-w-[100vw] form-container bg-white sm:rounded-2xl shadow-lg overflow-auto relative">
           {React.cloneElement(element, { key: location.pathname })}
         </div>
       </div>
