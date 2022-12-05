@@ -59,14 +59,18 @@ function Dashboard() {
 
   const getReverseGeocodingData = React.useCallback(
     function getReverseGeocodingData(lat: number, lng: number) {
+      // @ts-ignore
       var latlng = new google.maps.LatLng(lat, lng);
+      // @ts-ignore
       var geocoder = new google.maps.Geocoder();
       // @ts-ignore
       geocoder.geocode({ latLng: latlng }, (results, status) => {
+        // @ts-ignore
         if (status !== google.maps.GeocoderStatus.OK) {
           alert(status);
         }
         // This is checking to see if the Geo-code Status is OK before proceeding
+        // @ts-ignore
         if (status === google.maps.GeocoderStatus.OK) {
           setLocation(results![0].formatted_address);
           setValue("pickup", results![0]);
