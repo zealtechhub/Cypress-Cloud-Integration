@@ -15,6 +15,7 @@ import Layout from "./components/layout";
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLDivElement
 );
+
 root.render(
   <Provider store={store}>
     <BrowserRouter>

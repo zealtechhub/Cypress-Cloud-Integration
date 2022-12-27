@@ -8,9 +8,9 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import BgImage from "../assets/create-account-image.jpg";
 import { Icon } from "@iconify/react";
-import SelectCountry from "src/components/SelectCountry";
-import VerifyOtp from "src/components/VerifyOtp";
-import CompleteDetails from "src/components/CompleteDetails";
+import SelectCountry from "src/components/auth/SelectCountry";
+import VerifyOtp from "src/components/auth/VerifyOtp";
+import CompleteDetails from "src/components/auth/CompleteDetails";
 
 type FormDataType = {
   Name: string;
@@ -78,7 +78,7 @@ function CreateAccount() {
   const element = useRoutes([
     {
       path: "/",
-      element: <div />,
+      element: <div/>,
     },
     {
       path: "/verify-otp",
@@ -86,7 +86,7 @@ function CreateAccount() {
     },
     {
       path: "/complete-details",
-      element: <CompleteDetails phone={phone} />,
+      element: <CompleteDetails phone={phone}/>,
     },
   ]);
 
@@ -142,7 +142,7 @@ function CreateAccount() {
             className="google transition-[box-shadow] bg-gray-200 rounded-lg flex gap-x-2 items-center justify-center p-3 cursor-pointer hover:shadow-xl"
             onClick={() => navigate("complete-details")}
           >
-            <Icon icon={"logos:google-icon"} />
+            <Icon icon={"logos:google-icon"}/>
             <span className="font-bold">Continue With Google</span>
           </div>
           <div className="note text-xs font-semibold my-4 text-center">

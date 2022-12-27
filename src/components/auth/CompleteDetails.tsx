@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { Checkbox, Divider, message, notification, Radio, Space } from "antd";
 import { Icon } from "@iconify/react";
-import Loading from "./Loading";
+import Loading from "../Loading";
 
 type FormDataType = {
   name: string;
@@ -125,7 +125,7 @@ function CompleteDetails(props: { phone: string }) {
     <div className="absolute top-0 h-full w-full overflow-hidden">
       {contextHolder}
       <AnimatePresence>
-        {loading && <Loading text="Creating Account..." />}
+        {loading && <Loading text="Creating Account..."/>}
       </AnimatePresence>
       <AnimatePresence onExitComplete={() => navigate(-1)}>
         {visible && (
@@ -153,7 +153,7 @@ function CompleteDetails(props: { phone: string }) {
               />
               <div className="title font-bold text-xl">Complete Details</div>
             </div>
-            <Divider style={{ marginBlock: 10 }} />
+            <Divider style={{ marginBlock: 10 }}/>
             <div className="form-group mb-2">
               <label htmlFor="deliverTo" className="block font-semibold mb-1">
                 Name

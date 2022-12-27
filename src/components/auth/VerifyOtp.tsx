@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Button, message } from "antd";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router";
-import Loading from "./Loading";
+import Loading from "../Loading";
 import { MessageInstance } from "antd/lib/message";
 
 function VerifyOtp({ messageApi }: { messageApi: MessageInstance }) {
@@ -61,7 +61,7 @@ function VerifyOtp({ messageApi }: { messageApi: MessageInstance }) {
   return (
     <div className="absolute top-0 h-full w-full overflow-hidden">
       <AnimatePresence>
-        {loading && <Loading text={"Verifying Otp..."} />}
+        {loading && <Loading text={"Verifying Otp..."}/>}
       </AnimatePresence>
       <AnimatePresence onExitComplete={() => navigate(-1)}>
         {visible && (
@@ -136,7 +136,7 @@ function VerifyOtp({ messageApi }: { messageApi: MessageInstance }) {
               })}
             </div>
 
-            <Timer />
+            <Timer/>
           </motion.div>
         )}
       </AnimatePresence>
