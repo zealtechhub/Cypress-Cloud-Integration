@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router";
 import Loading from "../Loading";
 import { Button, message } from "antd";
-import { MessageInstance } from "antd/lib/message";
+import { MessageInstance } from "antd/es/message/interface";
 
 function VerifyOtp({ messageApi }: { messageApi: MessageInstance }) {
   const [visible, setVisible] = React.useState(true);

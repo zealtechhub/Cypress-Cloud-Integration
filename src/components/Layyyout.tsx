@@ -5,8 +5,6 @@ import { AnimatePresence } from "framer-motion";
 
 // Pages
 import Home from "src/pages/Home";
-import Login from "../pages/signIn";
-import Profile from "../pages/Profile";
 import CreateAccount from "../pages/CreateAccount";
 import ProtectedRoute from "./ProtectedRoute";
 import { ConfigProvider } from "antd";
@@ -14,10 +12,6 @@ import AppDrawer from "./AppDrawer";
 
 function Layout() {
   const element = useRoutes([
-    {
-      path: "sign-in",
-      element: <Login />,
-    },
     {
       path: "create-account/*",
       element: <CreateAccount />,

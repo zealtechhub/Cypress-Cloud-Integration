@@ -11,7 +11,7 @@ import TrackDelivery from "@pages/TrackDelivery";
 import Payment from "@pages/Payment";
 import Logout from "@pages/Logout";
 import Help from "@pages/Help";
-import Profile from "@pages/Profile";
+import Profile from "@pages/Prooofile";
 
 // styles
 import "@styles/dashboard.sass";
