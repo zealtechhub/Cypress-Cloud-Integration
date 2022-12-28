@@ -11,7 +11,7 @@ function SlideTransition(props: SlideTransitionInterface) {
   const navigate = useNavigate();
   console.log({ props });
   return (
-    <div className="absolute top-0 h-full w-full overflow-hidden z-[9999]">
+    <div className="absolute top-0 h-full w-full overflow-hidden z-[99999]">
       <AnimatePresence onExitComplete={() => navigate(-1)}>
         {!props.unMount && (
           <motion.div

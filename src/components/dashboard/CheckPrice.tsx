@@ -1,5 +1,5 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import Button from "antd/lib/button";
 import { Car, Truck } from "../SVG";
@@ -78,21 +78,23 @@ function CheckPrice(props: {}) {
           />
         </div>
       </section>
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="actions fixed sm:absolute bottom-0 left-0 w-full bg-inherit p-4"
-      >
-        <Button
-          type="ghost"
-          htmlType="submit"
-          size="large"
-          className="!bg-secondary !text-black !w-full !rounded-lg !py-2 !h-auto !font-bold"
+      {!unMount && (
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0, transition: { delay: 0.3 } }}
+          exit={{ y: 50, opacity: 0 }}
+          className="actions fixed sm:absolute bottom-0 left-0 w-full bg-inherit p-4"
         >
-          Submit Form
-        </Button>
-      </motion.div>
+          <Button
+            type="ghost"
+            htmlType="submit"
+            size="large"
+            className="!bg-secondary !text-black !w-full !rounded-lg !py-2 !h-auto !font-bold"
+          >
+            Submit Form
+          </Button>
+        </motion.div>
+      )}
     </SlideTransition>
   );
 }

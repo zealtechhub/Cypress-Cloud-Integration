@@ -1,14 +1,14 @@
 import React from "react";
 import { useLocation, useRoutes } from "react-router";
+import { ConfigProvider } from "antd";
 
 import { AnimatePresence } from "framer-motion";
 
 // Pages
-import Home from "src/pages/Home";
-import CreateAccount from "../pages/CreateAccount";
-import ProtectedRoute from "./ProtectedRoute";
-import { ConfigProvider } from "antd";
-import AppDrawer from "./AppDrawer";
+import Home from "@pages/Home";
+import CreateAccount from "@pages/CreateAccount";
+import ProtectedRoute from "@comps/ProtectedRoute";
+import AppDrawer from "@comps/AppDrawer";
 
 function Layout() {
   const element = useRoutes([
@@ -24,8 +24,6 @@ function Layout() {
 
   const location = useLocation();
   if (!element) return null;
-
-  console.log("Rendered from layout");
 
   return (
     <ConfigProvider
