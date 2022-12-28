@@ -1,28 +1,73 @@
-import React from 'react';
+import React from "react";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
+
+// components
 import Map from "../components/dashboard/Map";
-import { Drawer, Input } from "antd";
-import { motion } from 'framer-motion';
-import { Car, Truck } from "../components/SVG";
 import InitialInfo from "../components/dashboard/InitialInfo";
+import { AnimatePresence } from "framer-motion";
+import { useRoutes } from "react-router";
+import BecomeAReecher from "@pages/BecomeAReecher";
+import TrackDelivery from "@pages/TrackDelivery";
+import Payment from "@pages/Payment";
+import Logout from "@pages/Logout";
+import Help from "@pages/Help";
+import Profile from "@pages/Profile";
+
+// styles
+import "@styles/dashboard.sass";
 
 const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 const render = (status: Status) => {
-  console.log({ status })
+  console.log({ status });
   return (
-    <div className="grid h-[400px] place-items-center">
-      <h1>{status}</h1>
-    </div>
-  )
+    <div
+      role={"status"}
+      className="grid h-full shadow animate-pulse bg-secondary/20 place-items-center"
+    />
+  );
 };
 
 function Dashboard() {
+  const element = useRoutes([
+    {
+      path: "profile",
+      element: <Profile />,
+    },
+    {
+      path: "become-a-reecher",
+      element: <BecomeAReecher />,
+    },
+    {
+      path: "track-delivery",
+      element: <TrackDelivery />,
+    },
+    {
+      path: "payment",
+      element: <Payment />,
+    },
+    {
+      path: "help-center",
+      element: <Help />,
+    },
+    {
+      path: "logout",
+      element: <Logout />,
+    },
+    {
+      path: "/*",
+      element: <div />,
+    },
+  ]);
+
   return (
     <div className={"wrapper"}>
       <Wrapper apiKey={GOOGLE_API_KEY} render={render}>
-        <Map style={{ height: 900 }}></Map>
+        <Map />
       </Wrapper>
-      <InitialInfo/>
+      <InitialInfo />
+      <AnimatePresence>
+        {React.cloneElement(element as React.ReactElement)}
+      </AnimatePresence>
     </div>
   );
 }

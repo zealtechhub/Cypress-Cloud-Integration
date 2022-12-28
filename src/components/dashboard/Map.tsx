@@ -1,13 +1,12 @@
-import React from 'react';
+import React from "react";
 import { Status, Wrapper } from "@googlemaps/react-wrapper";
 
 interface MapProps extends google.maps.MapOptions {
-  style: React.CSSProperties
+  style?: React.CSSProperties;
   onClick?: (e: google.maps.MapMouseEvent) => void;
   onIdle?: (map: google.maps.Map) => void;
-  children?: React.ReactNode[]
+  children?: React.ReactNode[];
 }
-
 
 function Map(props: MapProps) {
   const { style = {}, onIdle, onClick, ...options } = props;
@@ -21,7 +20,6 @@ function Map(props: MapProps) {
     }
   }, [ref, map]);
 
-
   React.useEffect(() => {
     if (map) {
       ["click", "idle"].forEach((eventName) =>
@@ -33,9 +31,7 @@ function Map(props: MapProps) {
     }
   }, [map, onClick, onIdle]);
 
-  return (
-    <div ref={ref} style={style}/>
-  );
+  return <div ref={ref} className="h-full" />;
 }
 
 export default Map;

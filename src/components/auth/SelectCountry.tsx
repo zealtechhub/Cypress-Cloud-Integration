@@ -2,7 +2,7 @@ import React from "react";
 import { Dropdown, Space } from "antd";
 import { motion } from "framer-motion";
 import { Country } from "src/pages/CreateAccount";
-import countries from "@/lib/countries";
+import countries from "@lib/countries";
 import { nanoid } from "@reduxjs/toolkit";
 
 type Props = {

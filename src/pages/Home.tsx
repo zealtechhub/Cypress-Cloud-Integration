@@ -1,15 +1,18 @@
 import React from "react";
-import { Divider } from "antd";
-import Button from "antd/lib/button";
-import { NavLink } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Carousel } from "react-responsive-carousel";
+import { useRoutes } from "react-router";
+import { AnimatePresence } from "framer-motion";
 
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import addressPicker from "../components/dashboard/AddressPicker";
-import LandingView from "src/components/LandingView";
-import ProtectedRoute from "../components/ProtectedRoute";
-import Dashboard from "./dashboard";
+// pages
+import Dashboard from "@pages/dashboard";
+import BecomeAReecher from "@pages/BecomeAReecher";
+import TrackDelivery from "@pages/TrackDelivery";
+import Payment from "@pages/Payment";
+import Logout from "@pages/Logout";
+import Help from "@pages/Help";
+import Profile from "@pages/Profile";
+
+// styles
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const Colors = ["rgba(255,0,0,.5)", "rgba(0,154,73,0.5)", "rgba(12,0,88,0.5)"];
 
@@ -24,9 +27,12 @@ function Home() {
   // });
 
   // if (loading) return <LandingView />;
+
   return (
-    <Dashboard/>
-  )
+    <React.Fragment>
+      <Dashboard />
+    </React.Fragment>
+  );
 
   // return (
   //   <motion.div
@@ -128,4 +134,4 @@ function Home() {
   // );
 }
 
-export default Home;
+export default React.memo(Home, () => true);

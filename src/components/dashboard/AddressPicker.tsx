@@ -1,79 +1,83 @@
-import { Avatar, Divider, Modal, Select } from "antd";
-import Button from "antd/lib/button";
+import { Input, Modal, Select } from "antd";
 import React from "react";
 import Autocomplete from "react-google-autocomplete";
 import { useForm } from "react-hook-form";
-import { Link, NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
-import stringToColor from "@/lib/stringToColor";
+import { Icon } from "@iconify/react";
+import LocationSearch from "./LocationSearch";
 
-interface PlaceResult {
-  geometry?: {
-    location?: {
-      lat: () => number;
-      lng: () => number;
-    };
-  };
-}
+export type PlaceResult = google.maps.places.AutocompletePrediction;
+
+export type SearchType = {
+  open: boolean;
+  /** the LocationSearch component can only open for Pick-Up location
+  and for Delivery location **/
+  type?: "pickupLocation" | "deliveryLocation";
+  title?: "Pick Up" | "Delivery";
+  selectedPlace?: PlaceResult;
+};
+
+export type AddressType = {
+  pickupLocation?: PlaceResult;
+  deliveryLocation?: PlaceResult;
+  weightCharge: number;
+  distance: number;
+};
 
 function AddressPicker() {
-  const { handleSubmit, setValue, watch, getValues } = useForm<{
-    pickup: PlaceResult;
-    deliverTo: PlaceResult;
-    weightCharge: number;
-    distance: number;
-    type: string;
-  }>({
+  const { handleSubmit, setValue, watch, getValues } = useForm<AddressType>({
     defaultValues: {
-      pickup: {},
-      deliverTo: {},
       weightCharge: 1,
-      type: "address",
     },
   });
 
-  const { distance, weightCharge, type } = watch();
+  const { distance, weightCharge, deliveryLocation, pickupLocation } = watch();
   const [openModal, setOpenModal] = React.useState<boolean>(false);
+  const [search, setSearch] = React.useState<SearchType>({
+    open: false,
+  });
   const [location, setLocation] = React.useState<string>();
 
-  const submit = (data: { pickup: PlaceResult; deliverTo: PlaceResult }) => {
-    const pickupCoordinates = {
-      lat: data.pickup.geometry?.location?.lat() as number,
-      lng: data.pickup.geometry?.location?.lng() as number,
-    };
-    const deliverToCoordinates = {
-      lat: data.deliverTo.geometry?.location?.lat() as number,
-      lng: data.deliverTo.geometry?.location?.lng() as number,
-    };
-
-    const distanceInMeters =
-      // @ts-ignore
-      google.maps.geometry.spherical.computeDistanceBetween(
-        pickupCoordinates,
-        deliverToCoordinates
-      ) as number;
-
-    setValue("distance", distanceInMeters);
-    setOpenModal(true);
+  const submit = (data: {
+    pickupLocation?: PlaceResult;
+    deliveryLocation?: PlaceResult;
+  }) => {
+    // let pickup = data.pickup as google.maps.places.PlaceResult
+    //   const pickupCoordinates = {
+    //     lat: data.pickup.geometry?.location?.lat() as number,
+    //     lng: data.pickup.geometry?.location?.lng() as number,
+    //   };
+    //   const deliverToCoordinates = {
+    //     lat: data.deliverTo.geometry?.location?.lat() as number,
+    //     lng: data.deliverTo.geometry?.location?.lng() as number,
+    //   };
+    //   const distanceInMeters =
+    //     // @ts-ignore
+    //     google.maps.geometry.spherical.computeDistanceBetween(
+    //       pickupCoordinates,
+    //       deliverToCoordinates
+    //     ) as number;
+    //   setValue("distance", distanceInMeters);
+    //   setOpenModal(true);
   };
 
   const getReverseGeocodingData = React.useCallback(
     function getReverseGeocodingData(lat: number, lng: number) {
-      // @ts-ignore
-      var latlng = new google.maps.LatLng(lat, lng);
-      // @ts-ignore
-      var geocoder = new google.maps.Geocoder();
+      const latlng = new google.maps.LatLng(lat, lng);
+      const geocoder = new google.maps.Geocoder();
+
+      console.log({ latlng });
       // @ts-ignore
       geocoder.geocode({ latLng: latlng }, (results, status) => {
-        // @ts-ignore
         if (status !== google.maps.GeocoderStatus.OK) {
           alert(status);
         }
         // This is checking to see if the Geo-code Status is OK before proceeding
-        // @ts-ignore
         if (status === google.maps.GeocoderStatus.OK) {
           setLocation(results![0].formatted_address);
-          setValue("pickup", results![0]);
+          console.log({ results });
+          // @ts-ignore
+          setValue("pickupLocation", results![0]);
         }
       });
     },
@@ -94,48 +98,70 @@ function AddressPicker() {
     );
   }, [getReverseGeocodingData]);
 
+  /**
+   * @description The parameter tell the function which location the user wants to type and set an identity state for it
+   * @param open tells the function to either close or open the LocationSearchComponent
+   * @param type
+   */
+  const handleLocationSearch = (
+    open: boolean,
+    title?: SearchType["title"],
+    type?: SearchType["type"]
+  ) => {
+    setSearch({
+      open,
+      title,
+      type,
+      ...(open
+        ? { selectedPlace: getValues(type as NonNullable<SearchType["type"]>) }
+        : {}),
+    });
+  };
+
   return (
     <>
       <motion.form
         initial={{ opacity: 0.6, y: 200 }}
         animate={{ opacity: 1, y: 0 }}
         onSubmit={handleSubmit(submit)}
-        className="rounded-2xl mx-auto flex flex-col gap-3 py-3 px-6 my-5 shadow-xl bg-[#f6fcff]"
+        className="rounded-2xl mx-auto flex flex-col gap-3 py-4 px-2 my-5 shadow-sm bg-[#f6fcff]"
       >
-        <div className="form-group">
-          <label htmlFor="deliverTo" className="block font-semibold mb-1">
-            Pick Up Location
-          </label>
-          <Autocomplete
-            className="w-full shadow-lg p-3 bg-transparent border border-solid border-blue-300 rounded-xl outline-none focus:ring ring-blue-400"
-            placeholder="Enter pick up location"
-            defaultValue={location}
-            options={{
-              types: [type],
-              componentRestrictions: {
-                country: "ng",
-              },
-            }}
-            onPlaceSelected={(place) => setValue("pickup", place)}
-          />
+        <div
+          className="form-group"
+          onClickCapture={() =>
+            handleLocationSearch(true, "Pick Up", "pickupLocation")
+          }
+        >
+          <div className="relative">
+            <div className="text-red-700 absolute top-[40%] -translate-y-1/2 left-2 h-3 w-3 rounded-full">
+              <Icon icon={"mdi:truck-cargo-container"} height={24} />
+            </div>
+            <Input
+              className={AutoCompleteClassName}
+              placeholder={"Pick up location"}
+              value={pickupLocation?.description}
+              disabled
+            />
+          </div>
         </div>
-        <div className="form-group">
-          <label htmlFor="deliverTo" className="block font-semibold mb-1">
-            Delivery Location
-          </label>
-          <Autocomplete
-            className="w-full shadow-lg p-3 bg-transparent border border-solid border-blue-300 rounded-xl outline-none focus:ring ring-blue-400"
-            placeholder="Enter delivery location"
-            onPlaceSelected={(place) => setValue("deliverTo", place)}
-            options={{
-              types: [type],
-              componentRestrictions: {
-                country: "ng",
-              },
-            }}
-          />
+        <div
+          className="form-group"
+          onClickCapture={() =>
+            handleLocationSearch(true, "Delivery", "deliveryLocation")
+          }
+        >
+          <div className="relative">
+            <div className="text-green-700 absolute top-[40%] -translate-y-1/2 left-2 h-3 w-3 rounded-full">
+              <Icon icon={"mdi:truck-check"} height={24} />
+            </div>
+            <Input
+              className={AutoCompleteClassName}
+              placeholder={"Delivery location"}
+              value={deliveryLocation?.description}
+              disabled
+            />
+          </div>
         </div>
-
       </motion.form>
       <Modal
         title="Complete Request"
@@ -186,9 +212,13 @@ function AddressPicker() {
           </span>
         </div>
       </Modal>
+      <LocationSearch {...{ setValue, search, handleLocationSearch }} />
     </>
   );
 }
+
+const AutoCompleteClassName =
+  "w-full !shadow-xs px-3 pl-12 py-2 !bg-transparent !text-gray-600 !border-b-[1.5px] border-solid border-gray-300 !outline-none";
 
 const weights = [
   {

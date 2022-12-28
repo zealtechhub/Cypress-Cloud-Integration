@@ -1,21 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
 ProtectedRoute.propTypes = {
-    name: PropTypes.string
+  name: PropTypes.string,
 };
 
 interface ProtectedRouteInterface {
-    children: React.ReactNode
+  children: React.ReactNode;
 }
 
 function ProtectedRoute(props: ProtectedRouteInterface) {
-    console.debug("Protected Route")
-    return (
-        <>
-            {props.children}
-        </>
-    );
+  console.debug("Protected Route");
+  return <>{props.children}</>;
 }
 
-export default ProtectedRoute;
+export default React.memo(ProtectedRoute, () => true);
