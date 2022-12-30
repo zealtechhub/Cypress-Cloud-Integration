@@ -10,12 +10,26 @@ export interface stateInterface {
   };
   mode: "light" | "dark" | "default";
   device: "mobile" | "tablet" | "desktop";
+  info: {
+    description: string;
+    courier?: "car" | "truck";
+  };
+  loaded: boolean;
 }
 
 const initialState: stateInterface = {
   loggedIn: false,
   mode: "default",
   device: "mobile",
+  user: {
+    email: "oderindejames02@gmail.com",
+    name: "Timi James",
+    phone: "+2349017241037",
+  },
+  info: {
+    description: "",
+  },
+  loaded: false,
 };
 
 const AppContext = createSlice({
@@ -41,8 +55,16 @@ const AppContext = createSlice({
       state.mode = actions.payload;
       cookie.set("state", JSON.stringify(state));
     },
+    INFO: (state, actions: PayloadAction<stateInterface["info"]>) => {
+      state.info = actions.payload;
+      cookie.set("state", JSON.stringify(state));
+    },
+    LOADED: (state, actions: PayloadAction<stateInterface["info"]>) => {
+      state.info = actions.payload;
+      cookie.set("state", JSON.stringify(state));
+    },
   },
 });
 
-export const { USER, RESIZE, MODE } = AppContext.actions;
+export const { USER, RESIZE, MODE, INFO } = AppContext.actions;
 export default AppContext.reducer;

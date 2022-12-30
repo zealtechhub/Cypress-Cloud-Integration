@@ -12,13 +12,13 @@ import Payment from "@pages/Payment";
 import Logout from "@pages/Logout";
 import Help from "@pages/Help";
 import Profile from "@pages/Profile";
+import AppDrawer from "@comps/AppDrawer";
 
 // styles
 import "@styles/dashboard.sass";
 
-const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-const render = (status: Status) => {
-  console.log({ status });
+export const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+export const render = (status: Status) => {
   return (
     <div
       role={"status"}
@@ -60,7 +60,8 @@ function Dashboard() {
   ]);
 
   return (
-    <div className={"wrapper"}>
+    <div className={"wrapper relative"}>
+      <AppDrawer />
       <Wrapper apiKey={GOOGLE_API_KEY} render={render}>
         <Map />
       </Wrapper>

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import LocationSearch from "./LocationSearch";
+import ShowOnMap, { ShowMapRefObject } from "@pages/ShowOnMap";
 
 export type PlaceResult = google.maps.places.AutocompletePrediction;
 
@@ -12,9 +13,10 @@ export type SearchType = {
   open: boolean;
   /** the LocationSearch component can only open for Pick-Up location
   and for Delivery location **/
-  type?: "pickupLocation" | "deliveryLocation";
+  type: "pickupLocation" | "deliveryLocation";
   title?: "Pick Up" | "Delivery";
   selectedPlace?: PlaceResult;
+  courier: "car" | "truck";
 };
 
 export type AddressType = {
@@ -24,7 +26,14 @@ export type AddressType = {
   distance: number;
 };
 
-function AddressPicker() {
+export type HandleLocationSearch = (
+  open: boolean,
+  title?: SearchType["title"],
+  type?: SearchType["type"],
+  selectedPlace?: PlaceResult
+) => void;
+
+function AddressPicker(props: { courier: SearchType["courier"] }) {
   const { handleSubmit, setValue, watch, getValues } = useForm<AddressType>({
     defaultValues: {
       weightCharge: 1,
@@ -35,8 +44,11 @@ function AddressPicker() {
   const [openModal, setOpenModal] = React.useState<boolean>(false);
   const [search, setSearch] = React.useState<SearchType>({
     open: false,
+    courier: "car",
+    type: "deliveryLocation",
   });
-  const [location, setLocation] = React.useState<string>();
+
+  const showMapRef = React.useRef<ShowMapRefObject>(null);
 
   const submit = (data: {
     pickupLocation?: PlaceResult;
@@ -61,12 +73,13 @@ function AddressPicker() {
     //   setOpenModal(true);
   };
 
+  /** get the description of the user current Location
+  with the lat and lng provided to it */
   const getReverseGeocodingData = React.useCallback(
     function getReverseGeocodingData(lat: number, lng: number) {
       const latlng = new google.maps.LatLng(lat, lng);
       const geocoder = new google.maps.Geocoder();
 
-      console.log({ latlng });
       // @ts-ignore
       geocoder.geocode({ latLng: latlng }, (results, status) => {
         if (status !== google.maps.GeocoderStatus.OK) {
@@ -74,10 +87,27 @@ function AddressPicker() {
         }
         // This is checking to see if the Geo-code Status is OK before proceeding
         if (status === google.maps.GeocoderStatus.OK) {
-          setLocation(results![0].formatted_address);
-          console.log({ results });
-          // @ts-ignore
-          setValue("pickupLocation", results![0]);
+          const currentLocation = results![0];
+
+          // making sure there currentLocation data is not empty
+          if (!currentLocation) return;
+
+          // Doing this complete AutoComplete because of the types assigned to it
+          // what's important here, is just the description and the place id
+          let currentLocationTransform: PlaceResult = {
+            description: currentLocation.formatted_address,
+            place_id: currentLocation.place_id,
+            types: currentLocation.types,
+            terms: [],
+            structured_formatting: {
+              main_text: "",
+              secondary_text: "",
+              main_text_matched_substrings: [],
+            },
+            matched_substrings: [],
+          };
+
+          setValue("pickupLocation", currentLocationTransform);
         }
       });
     },
@@ -85,17 +115,14 @@ function AddressPicker() {
   );
 
   React.useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      function (position) {
-        let lat = position.coords.latitude;
-        let lng = position.coords.longitude;
+    // This access user GPS and get the current location latitude
+    // and longitude
+    navigator.geolocation.getCurrentPosition(function (position) {
+      let lat = position.coords.latitude;
+      let lng = position.coords.longitude;
 
-        getReverseGeocodingData(lat, lng);
-      },
-      function errorCallback(error) {
-        console.log(error);
-      }
-    );
+      getReverseGeocodingData(lat, lng);
+    }, console.error);
   }, [getReverseGeocodingData]);
 
   /**
@@ -103,18 +130,20 @@ function AddressPicker() {
    * @param open tells the function to either close or open the LocationSearchComponent
    * @param type
    */
-  const handleLocationSearch = (
-    open: boolean,
-    title?: SearchType["title"],
-    type?: SearchType["type"]
+  const handleLocationSearch: HandleLocationSearch = (
+    open,
+    title,
+    type,
+    selectedPlace
   ) => {
+    console.debug({ selectedPlace });
     setSearch({
+      ...search,
       open,
       title,
-      type,
-      ...(open
-        ? { selectedPlace: getValues(type as NonNullable<SearchType["type"]>) }
-        : {}),
+      selectedPlace: open
+        ? selectedPlace ?? getValues(type as NonNullable<SearchType["type"]>)
+        : undefined,
     });
   };
 
@@ -212,13 +241,16 @@ function AddressPicker() {
           </span>
         </div>
       </Modal>
-      <LocationSearch {...{ setValue, search, handleLocationSearch }} />
+      <LocationSearch
+        {...{ setValue, search, handleLocationSearch, showMapRef }}
+      />
+      <ShowOnMap ref={showMapRef} {...{ handleLocationSearch }} />
     </>
   );
 }
 
-const AutoCompleteClassName =
-  "w-full !shadow-xs px-3 pl-12 py-2 !bg-transparent !text-gray-600 !border-b-[1.5px] border-solid border-gray-300 !outline-none";
+export const AutoCompleteClassName =
+  "w-full !shadow-xs px-3 pl-12 py-2 !bg-transparent !text-gray-600 !border-b-[1.5px] border-solid border-gray-300 !outline-none disabled:cursor-text";
 
 const weights = [
   {

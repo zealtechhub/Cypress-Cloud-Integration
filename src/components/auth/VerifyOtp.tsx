@@ -93,7 +93,7 @@ function VerifyOtp({ messageApi }: { messageApi: MessageInstance }) {
             <div className="form-group flex gap-x-4 w-[350px] max-w-full mx-auto my-5">
               {Array.from(new Array(5)).map((_, index) => {
                 return (
-                  <div className="form-control flex-grow">
+                  <div className="form-control flex-grow" key={index}>
                     <input
                       type="text"
                       className={inputBoxClass}
