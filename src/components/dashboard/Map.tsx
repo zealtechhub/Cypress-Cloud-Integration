@@ -79,7 +79,7 @@ function Map(props: MapProps) {
 
   return (
     <React.Fragment>
-      <div className="current-location fixed z-[999] bottom-52 right-5">
+      <div className="current-location fixed sm:absolute z-[999] bottom-52 right-5">
         <IconButton
           size="large"
           className="toggle-bt !z[9999] !bg-white shadow-2xl"

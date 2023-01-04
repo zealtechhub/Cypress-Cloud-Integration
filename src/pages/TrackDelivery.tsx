@@ -22,6 +22,8 @@ function TrackDelivery() {
             onChange={(e) => console.log({ e })}
             className="w-full p-1.5 shadow-lg mt-4 [&_.ant-segmented-item]:py-1.5 bg-secondary/30 [&_.ant-segmented-item-selected]:bg-secondary [&_.ant-segmented-item]:font-bold"
             options={["Current Delivery", "Delivery History"]}
+            onResize={undefined}
+            onResizeCapture={undefined}
           />
         </div>
         <section className="deliveries my-5 flex flex-col gap-y-4">
