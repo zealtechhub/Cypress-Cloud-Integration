@@ -21,7 +21,8 @@ export const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 export const render = (status: Status) => {
   return (
     <div
-      role={"status"}
+      title="This display the progress of map loading "
+      role="progressbar"
       className="grid h-full shadow animate-pulse bg-secondary/20 place-items-center"
     />
   );

@@ -2,17 +2,21 @@ import { CardActionArea, SwipeableDrawer } from "@mui/material";
 import { Button, Input } from "antd";
 import { AnimatePresence, motion, MotionProps } from "framer-motion";
 import React from "react";
-import { UseFormSetValue } from "react-hook-form";
-import { PlaceResult, SearchType, AddressType } from "./AddressPicker";
+import { PlaceResult, SearchType } from "./AddressPicker";
 import { Icon } from "@iconify/react";
 import { ShowMapRefObject } from "@pages/ShowOnMap";
 import Loading from "@comps/Loading";
 import { useAppSelector } from "@lib/redux/store";
+import { FormFields } from "./CheckPrice";
+import { HandleLocationSearch } from "@comps/dashboard/AddressPicker";
 
 type LocationSearchPropsType = {
   showMapRef: React.RefObject<ShowMapRefObject>;
   search: SearchType;
-  setValue: UseFormSetValue<AddressType>;
+  setValue: (
+    name: keyof FormFields,
+    value: FormFields[keyof FormFields]
+  ) => void;
   handleLocationSearch: (
     open: boolean,
     title?: SearchType["title"],
@@ -46,7 +50,6 @@ function LocationSearch(props: LocationSearchPropsType) {
   };
 
   React.useEffect(() => {
-    console.log({ search });
     let selectedPlace = search.selectedPlace?.description ?? "";
     if (search.open && selectedPlace) {
       setInputValue(selectedPlace);
@@ -81,11 +84,16 @@ function LocationSearch(props: LocationSearchPropsType) {
   };
 
   const Content = (
-    <div className="content h-[500px] rounded-t-2xl overflow-auto p-3 py-5">
+    <div className="content h-full rounded-t-2xl overflow-auto px-3 pb-5">
       <div
-        className="w-20 h-2 bg-gray-500/50 shadow-lg rounded-2xl mx-auto mb-3 cursor-pointer"
+        className="flex justify-end py-3"
         onClick={() => handleLocationSearch(false)}
-      />
+      >
+        <Button type="ghost" className="text-primary font-bold rounded-lg">
+          Cancel
+        </Button>
+      </div>
+
       <div className="title font-extrabold text-gray-700 text-lg mb-3 uppercase text-center">
         {search.title} Location
       </div>
@@ -166,7 +174,7 @@ function LocationSearch(props: LocationSearchPropsType) {
           <AnimatePresence>
             {search.open && (
               <motion.div
-                animate={{ opacity: 1, position: "absolute" }}
+                animate={{ opacity: 1 }}
                 initial={{ opacity: 0 }}
                 exit={{ opacity: 0 }}
                 onClick={() => handleLocationSearch(false)}
@@ -178,12 +186,12 @@ function LocationSearch(props: LocationSearchPropsType) {
             {search.open && (
               <motion.div
                 {...({
-                  initial: { bottom: -500, opacity: 0.8, position: "fixed" },
-                  animate: { bottom: 0, opacity: 1, position: "absolute" },
-                  exit: { bottom: -500 },
+                  initial: { y: 500, position: "fixed" },
+                  animate: { y: 0 },
+                  exit: { y: 500 },
                   transition: { type: "just", duration: 0.5 },
                   className:
-                    "absolute bottom-0 w-full left-0 z-[99999] rounded-t-2xl shadow-lg bg-white",
+                    "fixed bottom-0 h-[500px] w-full left-0 z-[99999] rounded-t-2xl shadow-lg bg-white",
                 } as MotionProps)}
               >
                 {Content}

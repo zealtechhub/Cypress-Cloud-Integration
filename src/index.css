@@ -2,6 +2,12 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+@layer components {
+  .ant-select-dropdown {
+    @apply !z-[9999999999] !fixed;
+  }
+}
+
 * {
   margin: 0;
   font-family: Nunito, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
@@ -18,4 +24,10 @@ code {
 
 body {
   background-color: #f6fcff !important;
+}
+
+.ant-select-dropdown,
+.ant-image-preview-wrap,
+.ant-message {
+  z-index: 999999999 !important;
 }

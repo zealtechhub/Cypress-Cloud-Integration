@@ -55,12 +55,12 @@ const AppContext = createSlice({
       state.mode = actions.payload;
       cookie.set("state", JSON.stringify(state));
     },
-    INFO: (state, actions: PayloadAction<stateInterface["info"]>) => {
-      state.info = actions.payload;
+    INFO: (state, actions: PayloadAction<Partial<stateInterface["info"]>>) => {
+      state.info = { ...state.info, ...actions.payload };
       cookie.set("state", JSON.stringify(state));
     },
-    LOADED: (state, actions: PayloadAction<stateInterface["info"]>) => {
-      state.info = actions.payload;
+    LOADED: (state, actions: PayloadAction<boolean>) => {
+      state.loaded = actions.payload;
       cookie.set("state", JSON.stringify(state));
     },
   },

@@ -1,11 +1,12 @@
-import { Input, Modal, Select } from "antd";
+import { Input } from "antd";
 import React from "react";
-import Autocomplete from "react-google-autocomplete";
-import { useForm } from "react-hook-form";
+import { FormState } from "react-hook-form";
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import LocationSearch from "./LocationSearch";
 import ShowOnMap, { ShowMapRefObject } from "@pages/ShowOnMap";
+import { FormFields } from "./CheckPrice";
+import jQuery from "jquery";
 
 export type PlaceResult = google.maps.places.AutocompletePrediction;
 
@@ -19,11 +20,14 @@ export type SearchType = {
   courier: "car" | "truck";
 };
 
-export type AddressType = {
+export type AddressPropsType = {
   pickupLocation?: PlaceResult;
   deliveryLocation?: PlaceResult;
-  weightCharge: number;
-  distance: number;
+  setValue: (
+    name: keyof FormFields,
+    value: FormFields[keyof FormFields]
+  ) => void;
+  errors: FormState<FormFields>["errors"];
 };
 
 export type HandleLocationSearch = (
@@ -33,15 +37,8 @@ export type HandleLocationSearch = (
   selectedPlace?: PlaceResult
 ) => void;
 
-function AddressPicker(props: { courier: SearchType["courier"] }) {
-  const { handleSubmit, setValue, watch, getValues } = useForm<AddressType>({
-    defaultValues: {
-      weightCharge: 1,
-    },
-  });
-
-  const { distance, weightCharge, deliveryLocation, pickupLocation } = watch();
-  const [openModal, setOpenModal] = React.useState<boolean>(false);
+function AddressPicker(props: AddressPropsType) {
+  const { pickupLocation, deliveryLocation, setValue, errors } = props;
   const [search, setSearch] = React.useState<SearchType>({
     open: false,
     courier: "car",
@@ -50,31 +47,9 @@ function AddressPicker(props: { courier: SearchType["courier"] }) {
 
   const showMapRef = React.useRef<ShowMapRefObject>(null);
 
-  const submit = (data: {
-    pickupLocation?: PlaceResult;
-    deliveryLocation?: PlaceResult;
-  }) => {
-    // let pickup = data.pickup as google.maps.places.PlaceResult
-    //   const pickupCoordinates = {
-    //     lat: data.pickup.geometry?.location?.lat() as number,
-    //     lng: data.pickup.geometry?.location?.lng() as number,
-    //   };
-    //   const deliverToCoordinates = {
-    //     lat: data.deliverTo.geometry?.location?.lat() as number,
-    //     lng: data.deliverTo.geometry?.location?.lng() as number,
-    //   };
-    //   const distanceInMeters =
-    //     // @ts-ignore
-    //     google.maps.geometry.spherical.computeDistanceBetween(
-    //       pickupCoordinates,
-    //       deliverToCoordinates
-    //     ) as number;
-    //   setValue("distance", distanceInMeters);
-    //   setOpenModal(true);
-  };
-
-  /** get the description of the user current Location
-  with the lat and lng provided to it */
+  /**
+   * * get the description of the user current Location with the lat and lng provided to it
+   */
   const getReverseGeocodingData = React.useCallback(
     function getReverseGeocodingData(lat: number, lng: number) {
       const latlng = new google.maps.LatLng(lat, lng);
@@ -111,12 +86,13 @@ function AddressPicker(props: { courier: SearchType["courier"] }) {
         }
       });
     },
-    [setValue]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   React.useEffect(() => {
-    // This access user GPS and get the current location latitude
-    // and longitude
+    // * This access user GPS and get the current location latitude
+    // * and longitude
     navigator.geolocation.getCurrentPosition(function (position) {
       let lat = position.coords.latitude;
       let lng = position.coords.longitude;
@@ -126,8 +102,8 @@ function AddressPicker(props: { courier: SearchType["courier"] }) {
   }, [getReverseGeocodingData]);
 
   /**
-   * @description The parameter tell the function which location the user wants to type and set an identity state for it
-   * @param open tells the function to either close or open the LocationSearchComponent
+   * @description // * The parameter tell the function which location the user wants to type and set an identity state for it
+   * @param open // * tells the function to either close or open the LocationSearchComponent
    * @param type
    */
   const handleLocationSearch: HandleLocationSearch = (
@@ -136,23 +112,26 @@ function AddressPicker(props: { courier: SearchType["courier"] }) {
     type,
     selectedPlace
   ) => {
-    console.debug({ selectedPlace });
+    jQuery(".check-price-wrapper").css(
+      "overflow",
+      open ? "hidden" : "hidden auto"
+    );
+
     setSearch({
       ...search,
       open,
       title,
       selectedPlace: open
-        ? selectedPlace ?? getValues(type as NonNullable<SearchType["type"]>)
+        ? selectedPlace ?? props[type as NonNullable<SearchType["type"]>]
         : undefined,
     });
   };
 
   return (
     <>
-      <motion.form
+      <motion.div
         initial={{ opacity: 0.6, y: 200 }}
         animate={{ opacity: 1, y: 0 }}
-        onSubmit={handleSubmit(submit)}
         className="rounded-2xl mx-auto flex flex-col gap-3 py-4 px-2 my-5 shadow-sm bg-[#f6fcff]"
       >
         <div
@@ -162,6 +141,7 @@ function AddressPicker(props: { courier: SearchType["courier"] }) {
           }
         >
           <div className="relative">
+            <div className="absolute h-full w-full z-10 cursor-text" />
             <div className="text-red-700 absolute top-[40%] -translate-y-1/2 left-2 h-3 w-3 rounded-full">
               <Icon icon={"mdi:truck-cargo-container"} height={24} />
             </div>
@@ -169,7 +149,7 @@ function AddressPicker(props: { courier: SearchType["courier"] }) {
               className={AutoCompleteClassName}
               placeholder={"Pick up location"}
               value={pickupLocation?.description}
-              disabled
+              status={errors.pickupLocation && "error"}
             />
           </div>
         </div>
@@ -180,6 +160,7 @@ function AddressPicker(props: { courier: SearchType["courier"] }) {
           }
         >
           <div className="relative">
+            <div className="absolute h-full w-full z-10 cursor-text" />
             <div className="text-green-700 absolute top-[40%] -translate-y-1/2 left-2 h-3 w-3 rounded-full">
               <Icon icon={"mdi:truck-check"} height={24} />
             </div>
@@ -187,60 +168,11 @@ function AddressPicker(props: { courier: SearchType["courier"] }) {
               className={AutoCompleteClassName}
               placeholder={"Delivery location"}
               value={deliveryLocation?.description}
-              disabled
+              status={errors.deliveryLocation && "error"}
             />
           </div>
         </div>
-      </motion.form>
-      <Modal
-        title="Complete Request"
-        centered
-        open={openModal}
-        okText="Accept"
-        onOk={() => {
-          setOpenModal(false);
-          console.log({ values: getValues() });
-        }}
-        onCancel={() => setOpenModal(false)}
-      >
-        <div className="wrap mb-3">
-          <label htmlFor="weight" className="block mb-2">
-            Select Item Weight
-          </label>
-          <Select
-            id="weight"
-            placeholder="Weight of goods"
-            defaultValue="1-5"
-            placement="topRight"
-            style={{ width: "100%" }}
-            onChange={(value) => setValue("weightCharge", parseInt(value))}
-            options={weights}
-          />
-        </div>
-        <div className="cost flex justify-between items-center">
-          <span className="text-blue-600 font-medium">Service Payment:</span>
-          <span className="font-bold text-slate-600 items-center flex">
-            <svg
-              width="1em"
-              height="1em"
-              preserveAspectRatio="xMidYMid meet"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M7 18V7.052a1.05 1.05 0 0 1 1.968-.51l6.064 10.916a1.05 1.05 0 0 0 1.968-.51V6M5 10h14M5 14h14"
-              />
-            </svg>
-            <span>
-              {Math.round(distance * weightCharge).toLocaleString("en")}{" "}
-            </span>
-          </span>
-        </div>
-      </Modal>
+      </motion.div>
       <LocationSearch
         {...{ setValue, search, handleLocationSearch, showMapRef }}
       />
@@ -251,20 +183,5 @@ function AddressPicker(props: { courier: SearchType["courier"] }) {
 
 export const AutoCompleteClassName =
   "w-full !shadow-xs px-3 pl-12 py-2 !bg-transparent !text-gray-600 !border-b-[1.5px] border-solid border-gray-300 !outline-none disabled:cursor-text";
-
-const weights = [
-  {
-    label: "0kg - 5kg",
-    value: 1,
-  },
-  {
-    label: "6kg - 10kg",
-    value: 2,
-  },
-  {
-    label: "11kg - 15kg",
-    value: 3,
-  },
-];
 
 export default AddressPicker;

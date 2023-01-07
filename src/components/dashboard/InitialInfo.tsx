@@ -20,7 +20,7 @@ function InitialInfo() {
   const element = useRoutes([
     {
       path: "check-price",
-      element: <CheckPrice courier={info.courier as "car" | "truck"} />,
+      element: <CheckPrice />,
     },
     {
       path: "/*",

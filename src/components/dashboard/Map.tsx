@@ -11,10 +11,19 @@ interface MapProps extends google.maps.MapOptions {
   markers?: google.maps.GeocoderResult[];
   type?: "pickupLocation" | "deliveryLocation";
   courier?: "car" | "truck";
+  showCurrent?: boolean;
 }
 
 function Map(props: MapProps) {
-  const { className, onIdle, onClick, markers, type, ...options } = props;
+  const {
+    className,
+    onIdle,
+    onClick,
+    markers,
+    type,
+    showCurrent = true,
+    ...options
+  } = props;
   const ref = React.useRef<HTMLDivElement>(null);
   const [map, setMap] = React.useState<google.maps.Map>();
   const [markersRef, setMarkersRef] = React.useState<google.maps.Marker[]>([]);
@@ -35,6 +44,7 @@ function Map(props: MapProps) {
           },
           zoomControl: false,
           fullscreenControl: false,
+          isFractionalZoomEnabled: false,
         })
       );
     }
@@ -79,14 +89,16 @@ function Map(props: MapProps) {
 
   return (
     <React.Fragment>
-      <div className="current-location fixed sm:absolute z-[999] bottom-52 right-5">
-        <IconButton
-          size="large"
-          className="toggle-bt !z[9999] !bg-white shadow-2xl"
-        >
-          <Icon icon={"tabler:current-location"} />
-        </IconButton>
-      </div>
+      {showCurrent && (
+        <div className="current-location fixed sm:absolute z-[999] bottom-52 right-5">
+          <IconButton
+            size="large"
+            className="toggle-bt !z[9999] !bg-white shadow-2xl"
+          >
+            <Icon icon={"tabler:current-location"} />
+          </IconButton>
+        </div>
+      )}
       <div ref={ref} className={className ?? "h-full"} />
     </React.Fragment>
   );
