@@ -109,18 +109,14 @@ function AddressPicker(props: AddressPropsType) {
   const handleLocationSearch: HandleLocationSearch = (
     open,
     title,
-    type,
+    type = "deliveryLocation",
     selectedPlace
   ) => {
-    jQuery(".check-price-wrapper").css(
-      "overflow",
-      open ? "hidden" : "hidden auto"
-    );
-
     setSearch({
       ...search,
       open,
       title,
+      type,
       selectedPlace: open
         ? selectedPlace ?? props[type as NonNullable<SearchType["type"]>]
         : undefined,

@@ -2,11 +2,13 @@ import React from "react";
 import { Status, Wrapper } from "@googlemaps/react-wrapper";
 import { Icon } from "@iconify/react";
 import { IconButton } from "@mui/material";
+import { useAppSelector } from "@lib/redux/store";
 
 interface MapProps extends google.maps.MapOptions {
   className?: string;
   onClick?: (e: google.maps.MapMouseEvent) => void;
   onIdle?: (map: google.maps.Map) => void;
+  onLoad?: (map: google.maps.Map) => void;
   children?: React.ReactNode[];
   markers?: google.maps.GeocoderResult[];
   type?: "pickupLocation" | "deliveryLocation";
@@ -19,6 +21,7 @@ function Map(props: MapProps) {
     className,
     onIdle,
     onClick,
+    onLoad,
     markers,
     type,
     showCurrent = true,
@@ -27,6 +30,7 @@ function Map(props: MapProps) {
   const ref = React.useRef<HTMLDivElement>(null);
   const [map, setMap] = React.useState<google.maps.Map>();
   const [markersRef, setMarkersRef] = React.useState<google.maps.Marker[]>([]);
+  const courier = useAppSelector((state) => state.sessionStore.info.courier);
 
   React.useEffect(() => {
     if (ref.current && !map) {
@@ -44,7 +48,6 @@ function Map(props: MapProps) {
           },
           zoomControl: false,
           fullscreenControl: false,
-          isFractionalZoomEnabled: false,
         })
       );
     }
@@ -58,6 +61,7 @@ function Map(props: MapProps) {
 
       if (onClick) map.addListener("click", onClick);
       if (onIdle) map.addListener("idle", () => onIdle(map));
+      if (onLoad) onLoad(map);
 
       const Icon = {
         car: "https://api.iconify.design/game-icons/city-car.svg",
@@ -72,7 +76,7 @@ function Map(props: MapProps) {
               lat: place?.geometry.location.lat(),
               lng: place?.geometry.location.lng(),
             },
-            icon: `${Icon[options.courier as "car" | "truck"]}?color=${
+            icon: `${Icon[courier as "car" | "truck"]}?color=${
               type === "deliveryLocation" ? "green" : "red"
             }&width=40`,
             title: "View Location",
@@ -85,7 +89,7 @@ function Map(props: MapProps) {
         });
       }
     }
-  }, [map, markers, onClick, onIdle, options.courier, type]);
+  }, [courier, map, markers, onClick, onIdle, onLoad, options.courier, type]);
 
   return (
     <React.Fragment>

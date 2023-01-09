@@ -28,6 +28,7 @@ const initialState: stateInterface = {
   },
   info: {
     description: "",
+    courier: "car",
   },
   loaded: false,
 };

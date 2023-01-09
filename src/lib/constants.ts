@@ -1,6 +1,12 @@
+import { Icon } from "@iconify/react";
 export const VehicleIcon = {
   car: "game-icons:city-car",
   truck: "mdi:truck-cargo-container",
+};
+
+export const VehicleIconLinks = {
+  car: "https://api.iconify.design/game-icons/city-car.svg",
+  truck: "https://api.iconify.design/mdi/truck-cargo-container.svg",
 };
 
 export const LocationType = {
@@ -57,21 +63,26 @@ export const paymentOptions = [
 export const itemTypes: {
   value: "flammable" | "fragile" | "normal" | "not-specified";
   label: string;
+  charge: number;
 }[] = [
   {
     label: "Flammable",
     value: "flammable",
+    charge: 2.3,
   },
   {
     label: "Fragile",
     value: "fragile",
+    charge: 4,
   },
   {
     label: "Normal",
     value: "normal",
+    charge: 1.5,
   },
   {
     label: "Not Specified",
     value: "not-specified",
+    charge: 1,
   },
 ];

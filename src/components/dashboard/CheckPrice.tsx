@@ -15,12 +15,12 @@ import OrderReech from "./OrderReech";
 export type FormFields = {
   pickupLocation: PlaceResult;
   deliveryLocation: PlaceResult;
-  weight: number;
+  weight: { value: number; label: string };
   timeRange: string;
   distance: number;
   paymentMethod: string;
   details?: string;
-  type: "flammable" | "fragile" | "normal" | "not-specified";
+  type: typeof itemTypes[0];
 };
 
 CheckPrice.propTypes = {};
@@ -166,7 +166,9 @@ function CheckPrice() {
                 id="item-details-text-control"
                 className="w-full"
                 status={errors.weight && "error"}
-                onChange={(weight) => handleChange("weight", weight)}
+                onChange={(_, weight) =>
+                  handleChange("weight", weight as FormFields["weight"])
+                }
               />
             </div>
             <div className="form-group payment-option">
@@ -194,7 +196,9 @@ function CheckPrice() {
                 placeholder="Select the type that best fit the items"
                 status={errors.type && "error"}
                 options={itemTypes}
-                onChange={(value) => handleChange("type", value)}
+                onChange={(_, item) =>
+                  handleChange("type", item as typeof itemTypes[0])
+                }
               />
             </div>
             <div className="form-group item-details">
@@ -230,7 +234,7 @@ function CheckPrice() {
         </motion.div>
       )}
       <AnimatePresence>
-        {openOrder && <OrderReech fields={getValues()} />}
+        {openOrder && <OrderReech {...{ fields: getValues(), setOpenOrder }} />}
       </AnimatePresence>
     </SlideTransition>
   );

@@ -132,10 +132,7 @@ function LocationSearch(props: LocationSearchPropsType) {
               <CardActionArea
                 onClick={() => {
                   handleLocationSearch(false);
-                  setValue(
-                    search.type as NonNullable<SearchType["type"]>,
-                    place
-                  );
+                  setValue(search.type, place);
                 }}
               >
                 {place.description}
@@ -165,6 +162,7 @@ function LocationSearch(props: LocationSearchPropsType) {
       </AnimatePresence>
     </div>
   );
+
   return (
     <React.Fragment>
       {loading && <Loading text="" unMount={loading} />}
