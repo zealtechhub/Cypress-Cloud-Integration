@@ -1,41 +1,15 @@
 import { Input } from "antd";
 import React from "react";
-import { FormState } from "react-hook-form";
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import LocationSearch from "./LocationSearch";
 import ShowOnMap, { ShowMapRefObject } from "@pages/ShowOnMap";
-import { FormFields } from "./CheckPrice";
-import jQuery from "jquery";
-
-export type PlaceResult = google.maps.places.AutocompletePrediction;
-
-export type SearchType = {
-  open: boolean;
-  /** the LocationSearch component can only open for Pick-Up location
-  and for Delivery location **/
-  type: "pickupLocation" | "deliveryLocation";
-  title?: "Pick Up" | "Delivery";
-  selectedPlace?: PlaceResult;
-  courier: "car" | "truck";
-};
-
-export type AddressPropsType = {
-  pickupLocation?: PlaceResult;
-  deliveryLocation?: PlaceResult;
-  setValue: (
-    name: keyof FormFields,
-    value: FormFields[keyof FormFields]
-  ) => void;
-  errors: FormState<FormFields>["errors"];
-};
-
-export type HandleLocationSearch = (
-  open: boolean,
-  title?: SearchType["title"],
-  type?: SearchType["type"],
-  selectedPlace?: PlaceResult
-) => void;
+import {
+  AddressPropsType,
+  HandleLocationSearch,
+  PlaceResult,
+  SearchType,
+} from "@lib/types";
 
 function AddressPicker(props: AddressPropsType) {
   const { pickupLocation, deliveryLocation, setValue, errors } = props;

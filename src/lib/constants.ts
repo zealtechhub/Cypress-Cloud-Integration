@@ -1,4 +1,6 @@
 import { Icon } from "@iconify/react";
+import DriverImage from "@assets/profile.jpg";
+import { DriverDetails } from "./types";
 export const VehicleIcon = {
   car: "game-icons:city-car",
   truck: "mdi:truck-cargo-container",
@@ -86,3 +88,19 @@ export const itemTypes: {
     charge: 1,
   },
 ];
+
+export const driverDetails: DriverDetails = {
+  name: "Olugbode Ajanaku",
+  contact: "+2349017241037",
+  image: DriverImage,
+  license: "BAT419JP",
+  color: "pink",
+  vehicle:
+    "Lexus RX350, color red with plate number <b class='font-lg'>28s3aaBT2</b>",
+  ratings: 4.5,
+  status: "coming",
+  currentLocation: {
+    lat: 6.50153,
+    lng: 3.35808,
+  },
+};

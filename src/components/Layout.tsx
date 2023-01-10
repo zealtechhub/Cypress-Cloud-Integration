@@ -8,7 +8,6 @@ import { AnimatePresence } from "framer-motion";
 import Home from "@pages/Home";
 import CreateAccount from "@pages/CreateAccount";
 import ProtectedRoute from "@comps/ProtectedRoute";
-import AppDrawer from "@comps/AppDrawer";
 import MediaControl from "./MediaControl";
 import { useAppSelector } from "@lib/redux/store";
 

@@ -15,6 +15,9 @@ export interface stateInterface {
     courier?: "car" | "truck";
   };
   loaded: boolean;
+  currentDelivery: {
+    driverDetails: [];
+  }[];
 }
 
 const initialState: stateInterface = {
@@ -31,6 +34,7 @@ const initialState: stateInterface = {
     courier: "car",
   },
   loaded: false,
+  currentDelivery: [],
 };
 
 const AppContext = createSlice({

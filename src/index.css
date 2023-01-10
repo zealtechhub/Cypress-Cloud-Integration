@@ -28,6 +28,13 @@ body {
 
 .ant-select-dropdown,
 .ant-image-preview-wrap,
+.ant-image-preview-operations-wrapper,
+.ant-image-preview-mask,
 .ant-message {
   z-index: 999999999 !important;
+}
+
+.ant-image-preview-img-wrapper {
+  display: grid;
+  place-items: center;
 }

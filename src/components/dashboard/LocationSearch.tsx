@@ -1,29 +1,11 @@
 import { CardActionArea, SwipeableDrawer } from "@mui/material";
-import { Button, Input } from "antd";
+import { Button, Dropdown, Input } from "antd";
 import { AnimatePresence, motion, MotionProps } from "framer-motion";
 import React from "react";
-import { PlaceResult, SearchType } from "./AddressPicker";
 import { Icon } from "@iconify/react";
-import { ShowMapRefObject } from "@pages/ShowOnMap";
 import Loading from "@comps/Loading";
 import { useAppSelector } from "@lib/redux/store";
-import { FormFields } from "./CheckPrice";
-import { HandleLocationSearch } from "@comps/dashboard/AddressPicker";
-
-type LocationSearchPropsType = {
-  showMapRef: React.RefObject<ShowMapRefObject>;
-  search: SearchType;
-  setValue: (
-    name: keyof FormFields,
-    value: FormFields[keyof FormFields]
-  ) => void;
-  handleLocationSearch: (
-    open: boolean,
-    title?: SearchType["title"],
-    type?: SearchType["type"],
-    selectedPlace?: PlaceResult
-  ) => void;
-};
+import { LocationSearchPropsType, PlaceResult } from "@lib/types";
 
 function LocationSearch(props: LocationSearchPropsType) {
   const { search, handleLocationSearch, setValue, showMapRef } = props;
@@ -37,6 +19,8 @@ function LocationSearch(props: LocationSearchPropsType) {
 
   const findPlaces = async (place: string) => {
     if (!place) return setPlaces([]);
+    if (place.length % 2 !== 0) return;
+
     const placesFinder = new google.maps.places.AutocompleteService();
     const places = await placesFinder.getPlacePredictions({
       input: place,
@@ -60,15 +44,14 @@ function LocationSearch(props: LocationSearchPropsType) {
     }
   }, [search]);
 
-  const openLocationOnMap = async () => {
+  const openLocationOnMap = async (placeId: string) => {
     handleLocationSearch(false, search.title, search.type, places[0]);
 
     // tell user before show locations on map
     setLoading(true);
 
     const Geocoder = new google.maps.Geocoder();
-    const placesData = (await Geocoder.geocode({ placeId: places[0].place_id }))
-      .results;
+    const placesData = (await Geocoder.geocode({ placeId })).results;
 
     setTimeout(() => {
       showMapRef.current?.showOnMap({
@@ -114,7 +97,7 @@ function LocationSearch(props: LocationSearchPropsType) {
           className={"mb-3 shadow-lg shadow-secondary/10"}
         />
       )}
-      <div className="matched-results flex flex-col gap-y-2 min-h-[250px]">
+      <div className="matched-results flex flex-col gap-y-4 min-h-[250px]">
         {!Boolean(places.length) && (
           <div className="waiting text-sm">
             Place Predictions Will Appear Here
@@ -126,17 +109,36 @@ function LocationSearch(props: LocationSearchPropsType) {
               initial={{ x: 10, opacity: 0.5 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ scale: 0.5, opacity: 0 }}
-              className="place-wrap border-b border-gray-400 p-3 font-semibold"
+              className="place-wrap font-semibold"
               key={place.place_id}
             >
-              <CardActionArea
-                onClick={() => {
-                  handleLocationSearch(false);
-                  setValue(search.type, place);
+              <Dropdown
+                menu={{
+                  items: [
+                    {
+                      label: "Show on map",
+                      key: place.place_id,
+                      onClick: () => openLocationOnMap(place.place_id),
+                    },
+                  ],
                 }}
+                overlayClassName="z-[99999]"
+                openClassName="z-[9999999]"
+                trigger={["contextMenu"]}
               >
-                {place.description}
-              </CardActionArea>
+                <CardActionArea
+                  className="!px-3 shadow-sm !bg-primary/[0.03] !rounded-lg !py-2 !border-b !border-gray-400"
+                  onClick={() => {
+                    handleLocationSearch(false);
+                    setValue(search.type, place);
+                  }}
+                >
+                  <b className="text-blue-900">
+                    {place.description.substring(0, inputValue?.length)}
+                  </b>{" "}
+                  {place.description.slice(inputValue!.length)}
+                </CardActionArea>
+              </Dropdown>
             </motion.div>
           ))}
         </AnimatePresence>
@@ -151,11 +153,11 @@ function LocationSearch(props: LocationSearchPropsType) {
             <Button
               type="primary"
               size="large"
-              onClickCapture={openLocationOnMap}
+              onClickCapture={() => openLocationOnMap(places[0].place_id)}
               className="!bg-primary text-lg font-bold mt-5 flex items-center gap-x-2"
             >
               <Icon icon={"material-symbols:map-outline"} height={24} />
-              <span>Open on map</span>
+              <span>Search on Map</span>
             </Button>
           </motion.div>
         )}

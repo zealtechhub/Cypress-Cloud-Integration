@@ -1,29 +1,21 @@
 import React from "react";
+import { useAppDispatch, useAppSelector } from "@lib/redux/store";
+import { useForm } from "react-hook-form";
+import { INFO } from "@lib/redux/userSlice";
+
+// * components
 import { AnimatePresence, motion } from "framer-motion";
 import Button from "antd/lib/button";
 import { Divider, Input, Radio, Select, message } from "antd";
-import AddressPicker, { PlaceResult } from "./AddressPicker";
+import AddressPicker from "./AddressPicker";
 import SlideTransition from "@comps/animations/SlideTransition";
 import GoBack from "@comps/GoBack";
 import { IconsComp } from "./InitialInfo";
-import { useAppDispatch, useAppSelector } from "@lib/redux/store";
-import { useForm } from "react-hook-form";
 import { itemTypes, paymentOptions, weights } from "@lib/constants";
-import { INFO } from "@lib/redux/userSlice";
 import OrderReech from "./OrderReech";
 
-export type FormFields = {
-  pickupLocation: PlaceResult;
-  deliveryLocation: PlaceResult;
-  weight: { value: number; label: string };
-  timeRange: string;
-  distance: number;
-  paymentMethod: string;
-  details?: string;
-  type: typeof itemTypes[0];
-};
-
-CheckPrice.propTypes = {};
+// * libraries types
+import { FormFields } from "@lib/types";
 
 function CheckPrice() {
   const courier = useAppSelector((state) => state.sessionStore.info.courier);
