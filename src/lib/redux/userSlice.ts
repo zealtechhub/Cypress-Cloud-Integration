@@ -1,41 +1,22 @@
+import { Order, stateInterface } from "@lib/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import cookie from "js-cookie";
 
-export interface stateInterface {
-  loggedIn: boolean;
-  user?: {
-    name: string;
-    email: string;
-    phone: string;
-  };
-  mode: "light" | "dark" | "default";
-  device: "mobile" | "tablet" | "desktop";
-  info: {
-    description: string;
-    courier?: "car" | "truck";
-  };
-  loaded: boolean;
-  currentDelivery: {
-    driverDetails: [];
-  }[];
-}
-
-const initialState: stateInterface = {
+let defaultState = JSON.stringify({
   loggedIn: false,
   mode: "default",
   device: "mobile",
-  user: {
-    email: "oderindejames02@gmail.com",
-    name: "Timi James",
-    phone: "+2349017241037",
-  },
+  user: null,
   info: {
     description: "",
-    courier: "car",
   },
   loaded: false,
-  currentDelivery: [],
-};
+  orders: [],
+});
+
+const initialState: stateInterface = JSON.parse(
+  cookie.get("state") ?? defaultState
+);
 
 const AppContext = createSlice({
   name: "appState",
@@ -68,8 +49,38 @@ const AppContext = createSlice({
       state.loaded = actions.payload;
       cookie.set("state", JSON.stringify(state));
     },
+    ADD_ORDER: (state, actions: PayloadAction<Order>) => {
+      state.orders = [...state.orders, actions.payload];
+      cookie.set("state", JSON.stringify(state));
+    },
+    CANCEL_ORDER: (state, actions: PayloadAction<string>) => {
+      state.orders = state.orders.map((order) => {
+        if (order.id !== actions.payload) {
+          return { ...order, status: "cancelled" };
+        }
+        return order;
+      });
+      cookie.set("state", JSON.stringify(state));
+    },
+    UPDATE_ORDER: (state, actions: PayloadAction<Partial<Order>>) => {
+      state.orders = state.orders.map((order) => {
+        if (order.id !== actions.payload) {
+          return { ...order, ...actions.payload };
+        }
+        return order;
+      });
+      cookie.set("state", JSON.stringify(state));
+    },
   },
 });
 
-export const { USER, RESIZE, MODE, INFO } = AppContext.actions;
+export const {
+  USER,
+  RESIZE,
+  MODE,
+  INFO,
+  ADD_ORDER,
+  CANCEL_ORDER,
+  UPDATE_ORDER,
+} = AppContext.actions;
 export default AppContext.reducer;

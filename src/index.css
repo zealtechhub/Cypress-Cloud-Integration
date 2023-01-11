@@ -38,3 +38,7 @@ body {
   display: grid;
   place-items: center;
 }
+
+.ant-btn-primary {
+  background-color: rgba(250, 221, 60, 1);
+}

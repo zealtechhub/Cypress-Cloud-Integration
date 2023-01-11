@@ -113,7 +113,7 @@ function CheckPrice() {
           <div className="max-weight w-max px-5 p-3 bg-primary/10 rounded-lg border-1 border-primary/70 font-semibold text-sm">
             Max Weight: 100kg
           </div>
-          <div className="delivery flex items-center my-5 gap-x-4">
+          <div className="delivery flex flex-wrap items-center my-5 gap-x-2">
             <span className="title font-semibold text-sm">
               Delivery Time <b className="text-red-600 text-lg">*</b>
             </span>

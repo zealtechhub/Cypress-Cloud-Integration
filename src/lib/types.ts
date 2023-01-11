@@ -3,6 +3,36 @@ import { FormState } from "react-hook-form";
 import React from "react";
 import { ShowMapRefObject } from "@pages/ShowOnMap";
 
+export interface stateInterface {
+  loggedIn: boolean;
+  user: User | null;
+  mode: "light" | "dark" | "default";
+  device: "mobile" | "tablet" | "desktop";
+  info: {
+    description: string;
+    courier?: "car" | "truck";
+  };
+  loaded: boolean;
+  orders: Order[];
+}
+
+export interface Order extends FormFields {
+  id: string;
+  driverDetails: DriverDetails;
+  status: "delivering" | "delivered" | "cancelled";
+  courier: "car" | "truck";
+  date: string;
+  deliveryTime: string;
+}
+
+export type User = {
+  name: string;
+  email: string;
+  phone: string;
+  verified: boolean;
+  gender: string | null;
+};
+
 export type PlaceResult = google.maps.places.AutocompletePrediction;
 export type FormFields = {
   pickupLocation: PlaceResult;

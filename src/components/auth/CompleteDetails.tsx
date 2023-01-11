@@ -7,24 +7,30 @@ import { useForm } from "react-hook-form";
 import { Checkbox, Divider, message, notification, Radio, Space } from "antd";
 import { Icon } from "@iconify/react";
 import Loading from "../Loading";
+import SlideTransition from "@comps/animations/SlideTransition";
+import GoBack from "@comps/GoBack";
+import useFetch from "src/hooks/useFetch";
+import { PatternFormat } from "react-number-format";
+import { Country } from "@pages/Auth";
+import { useAppDispatch } from "@lib/redux/store";
+import { USER } from "@lib/redux/userSlice";
 
-type FormDataType = {
+export type FormDataType = {
   name: string;
   email: string;
   phone: string;
   checked: boolean;
+  password: string;
 };
 
 type Keys = keyof FormDataType;
 
-function CompleteDetails(props: { phone: string }) {
-  const { phone } = props;
-  const [messageApi, contextHolder] = message.useMessage();
-  // created to animate component before detaching
-  const [visible, setVisible] = React.useState(true);
-  // created for managing request state
-  const [loading, setLoading] = React.useState(false);
+function CompleteDetails(props: { phone: string; country: Country }) {
+  const { phone, country } = props;
   const navigate = useNavigate();
+  const [unMount, setUnMount] = React.useState(false);
+  const { fetching, create } = useFetch();
+  const dispatch = useAppDispatch();
 
   // formState handle
   const [fields, setFields] = React.useState<FormDataType>({
@@ -32,186 +38,166 @@ function CompleteDetails(props: { phone: string }) {
     email: "",
     checked: false,
     phone,
+    password: "",
   });
 
   const [errors, setErrors] = React.useState<{
     [x in keyof FormDataType]?: boolean;
   }>({});
 
-  // React.useEffect(() => {
-  //   setTimeout(() => {
-  //     setLoading(true);
-  //     setTimeout(() => {
-  //       setLoading(false);
-  //     }, 3000);
-  //   }, 3000);
-  // }, []);
-
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (loading) {
-      return messageApi.open({
-        type: "info",
-        content: "There is a pending request",
-      });
+    if (fetching) {
+      return message.error("There is an active fetch session");
     }
 
-    setLoading(true);
+    if (Object.values(fields).some((v) => !v)) {
+      (Object.keys(fields) as [Keys]).forEach((key, i) => {
+        if (!fields[key]) {
+          setErrors((errors) => ({ ...errors, [key]: true }));
+        }
+      });
 
-    // if (!fields.name || !fields.email || !fields.phone) {
-    //   (Object.keys(fields) as [Keys]).forEach((key, i) => {
-    //     if (!fields[key]) {
-    //       setErrors((errors) => ({ ...errors, [key]: true }));
-    //     }
-    //   });
+      return message.error("All Fields Required");
+    }
 
-    //   setLoading(false);
+    const { success, error, feedback } = await create(fields);
 
-    //   messageApi.open({
-    //     type: "error",
-    //     content: "All Fields Required",
-    //     className: "rounded-lg items-center",
-    //   });
+    if (!error) message[success ? "success" : "error"](feedback);
 
-    //   return;
-    // }
-
-    // const send = await fetch("https://node.wizarphics.com/users/create/", {
-    //   method: "POST",
-    //   body: JSON.stringify(fields),
-    //   headers: {
-    //     Accept: "application/json",
-    //   },
-    //   redirect: "follow",
-    // });
-
-    // const response = await send.json();
-
-    // messageApi.open({
-    //   type: response.success ? "success" : "error",
-    //   content: response.success
-    //     ? "Account Created Successfully"
-    //     : response.message,
-    //   style: {
-    //     borderRadius: "20px",
-    //   },
-    // });
-
-    // if (response.success) {
-    //   setTimeout(() => {
-    //     navigate("/sign-in", { replace: true });
-    //   }, 3000);
-    // } else setLoading(false);
-
-    messageApi.open({
-      type: "success",
-      content: "All Fields Required",
-      className: "!rounded-lg !items-center ",
-    });
-
+    if (!success) return;
     notification.info({
       message: "You have a new notification",
       placement: "bottomRight",
-      className: "border-4 border-secondary/50 !rounded-lg",
+      className: "ring-2 ring-secondary/30 !rounded-lg",
     });
 
-    setTimeout(() => {
-      sessionStorage.setItem("user", JSON.stringify(fields));
-      navigate("/", { replace: true });
-    }, 1000);
+    dispatch(
+      USER({
+        name: fields.name,
+        email: fields.email,
+        phone: fields.phone,
+        verified: true,
+        gender: null,
+      })
+    );
+    navigate("/", { replace: true });
   };
 
   return (
-    <div className="absolute top-0 h-full w-full overflow-hidden">
-      {contextHolder}
+    <SlideTransition unMount={unMount}>
       <AnimatePresence>
-        {loading && <Loading text="Creating Account..."/>}
+        {fetching && <Loading text="Creating Account" />}
       </AnimatePresence>
-      <AnimatePresence onExitComplete={() => navigate(-1)}>
-        {visible && (
-          <motion.form
-            animate={{ x: 0 }}
-            initial={{ x: 500 }}
-            exit={{ position: "absolute", left: "100%" }}
-            transition={{ type: "just" }}
-            onSubmit={submit}
-            className="p-4 h-full w-full top-0 left-0 bg-white"
-          >
-            <div className="flex items-center gap-x-3">
-              <Button
-                shape="circle"
-                className=" !grid !place-items-center"
-                onClick={() => setVisible(false)}
-                icon={
-                  <Icon
-                    icon={"material-symbols:arrow-back-ios-rounded"}
-                    height={16}
-                    className="inline-block ml-1"
-                    color="inherit"
-                  />
-                }
-              />
-              <div className="title font-bold text-xl">Complete Details</div>
-            </div>
-            <Divider style={{ marginBlock: 10 }}/>
-            <div className="form-group mb-2">
-              <label htmlFor="deliverTo" className="block font-semibold mb-1">
-                Name
-              </label>
-              <Input
-                placeholder="Enter your name"
-                size="large"
-                className="!rounded-lg shadow-sm"
-                status={errors.name ? "error" : undefined}
-                onChange={(e) => setFields({ ...fields, name: e.target.value })}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="deliverTo" className="block font-semibold mb-1">
-                Email Address
-              </label>
-              <Input
-                placeholder="Enter your Email"
-                size="large"
-                className="!rounded-lg shadow-sm"
-                status={errors.email ? "error" : undefined}
-                onChange={(e) =>
-                  setFields({ ...fields, email: e.target.value })
-                }
-              />
-            </div>
+      <div className="flex items-center gap-x-3">
+        <GoBack setUnMount={setUnMount} />
+        <div className="title font-bold text-xl">Complete Details</div>
+      </div>
+      <Divider style={{ marginBlock: 10 }} />
+      <form
+        onSubmit={submit}
+        className="py-4 flex flex-col gap-y-4 h-full w-full top-0 left-0 bg-white"
+      >
+        <div className="form-group mb-2">
+          <label htmlFor="deliverTo" className="block font-semibold mb-1">
+            Name
+          </label>
+          <Input
+            placeholder="Enter your name"
+            size="large"
+            className="!rounded-lg shadow-sm"
+            status={errors.name ? "error" : undefined}
+            value={fields.name}
+            onChange={(e) => setFields({ ...fields, name: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="deliverTo" className="block font-semibold mb-1">
+            Email Address
+          </label>
+          <Input
+            placeholder="Enter your Email"
+            size="large"
+            className="!rounded-lg shadow-sm"
+            status={errors.email ? "error" : undefined}
+            value={fields.email}
+            onChange={(e) => setFields({ ...fields, email: e.target.value })}
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="deliverTo" className="block font-semibold mb-1">
+            Phone number
+          </label>
+          <div className="form-control ring ring-gray-100 flex bg-gray-200 shadow-sm rounded-xl">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={country.dial_code}
+                initial={{ y: -30 }}
+                animate={{ y: 0 }}
+                exit={{ y: 30, opacity: 0, transition: { duration: 0.1 } }}
+                className="cursor-pointer border-r-2 border- p-3 gap-x-2 flex items-center justify-center"
+              >
+                <img
+                  alt="user country flag"
+                  src={"/flags/" + country.code + ".png"}
+                  className="h-5 w-6 rounded-lg shadow-2xl ring-4 ring-secondary/50"
+                />
+                <span className="font-bold">{country.dial_code}</span>
+              </motion.div>
+            </AnimatePresence>
 
-            <div className="absolute bottom-0 left-0 w-full">
-              <div className="wrap button-group flex flex-col gap-y-3 w-full justify-center p-3">
-                <div className="form-group">
-                  <Space>
-                    <Checkbox
-                      onChange={(e) =>
-                        setFields({ ...fields, checked: e.target.checked })
-                      }
-                    />
-                    <span>
-                      I agree to Reech’s{" "}
-                      <b className="text-primary">Terms and Policy</b>
-                    </span>
-                  </Space>
-                </div>
-                <Button
-                  loading={loading}
-                  disabled={!fields.checked || !fields.name || !fields.email}
-                  type="primary"
-                  htmlType="submit"
-                  size="large"
-                  className="!rounded-lg !h-auto !py-3 disabled:!bg-secondary/30 !font-bold !text-gray-600 shadow-lg w-full !bg-[rgba(250,221,60,1)]  !border-none"
-                >
-                  Complete Account
-                </Button>
-              </div>
+            <PatternFormat
+              className="rounded-r-lg disabled:!bg-white p-3 flex-grow outline-none focus:ring-2 focus:ring-secondary/50 transition-all"
+              placeholder="Enter Phone no."
+              disabled
+              value={phone}
+              format="#### ### ####"
+            />
+          </div>
+        </div>
+        <div className="form-group">
+          <label htmlFor="password" className="block font-semibold mb-1">
+            Password
+          </label>
+          <Input.Password
+            size="large"
+            id="password"
+            className="shadow-sm"
+            status={errors.password ? "error" : undefined}
+            placeholder="Create your password"
+            value={fields.password}
+            onChange={(e) => setFields({ ...fields, password: e.target.value })}
+          />
+        </div>
+        <div className="absolute bottom-0 left-0 w-full">
+          <div className="wrap button-group flex flex-col gap-y-3 w-full justify-center p-3">
+            <div className="form-group">
+              <Space>
+                <Checkbox
+                  onChange={(e) =>
+                    setFields({ ...fields, checked: e.target.checked })
+                  }
+                />
+                <span>
+                  I agree to Reech’s{" "}
+                  <b className="text-primary">Terms and Policy</b>
+                </span>
+              </Space>
             </div>
-          </motion.form>
-        )}
-      </AnimatePresence>
-    </div>
+            <Button
+              loading={fetching}
+              disabled={Object.values(fields).some((v) => !v)}
+              type="primary"
+              htmlType="submit"
+              size="large"
+              className="!rounded-lg !h-auto !py-3 disabled:!bg-secondary/30 !font-bold !text-gray-600 shadow-lg w-full !bg-[rgba(250,221,60,1)]  !border-none"
+            >
+              Complete Account
+            </Button>
+          </div>
+        </div>
+      </form>
+    </SlideTransition>
   );
 }
 

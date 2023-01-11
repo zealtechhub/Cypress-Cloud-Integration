@@ -1,8 +1,8 @@
 import React from "react";
 import { AnimatePresence, Transition, motion } from "framer-motion";
-import { Button, Image, Spin } from "antd";
+import { Button, Image, Modal, Spin } from "antd";
 import { Icon } from "@iconify/react";
-import { useAppSelector } from "@lib/redux/store";
+import { useAppDispatch, useAppSelector } from "@lib/redux/store";
 import { VehicleIcon, VehicleIconLinks, driverDetails } from "@lib/constants";
 import { GoogleMap, Marker, DirectionsRenderer } from "@react-google-maps/api";
 import { format } from "date-fns";
@@ -11,12 +11,17 @@ import { getGeocode } from "@lib/helpers";
 
 // @asset
 import DriverImage from "@assets/profile.jpg";
-import { DriverDetails, FormFields, OrderStateType } from "@lib/types";
+import { DriverDetails, FormFields, Order, OrderStateType } from "@lib/types";
+import { useNavigate } from "react-router";
+import { ADD_ORDER, CANCEL_ORDER, UPDATE_ORDER } from "@lib/redux/userSlice";
+import { nanoid } from "@reduxjs/toolkit";
 
 type PropsType = {
   fields: FormFields;
   setOpenOrder: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
+const orderId = nanoid();
 
 function OrderReech(props: PropsType) {
   const { pickupLocation, deliveryLocation, weight, type } = props.fields;
@@ -28,6 +33,8 @@ function OrderReech(props: PropsType) {
     directions: null,
   });
   const [loading, setLoading] = React.useState<boolean>(true);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const mapLoaded = async () => {
     var directionsService = new google.maps.DirectionsService();
@@ -104,12 +111,6 @@ function OrderReech(props: PropsType) {
       lat: driver.geometry.location.lat(),
       lng: driver.geometry.location.lng(),
     };
-
-    console.log({
-      destination,
-      origin,
-    });
-
     var request: google.maps.DirectionsRequest = {
       origin,
       destination,
@@ -127,6 +128,16 @@ function OrderReech(props: PropsType) {
     setTimeout(() => {
       // * Tell the user that a driver has been found close to the pickup location
       setState({ ...state, reech: "Reeched" });
+      let newOrder: Order = {
+        ...props.fields,
+        driverDetails,
+        id: orderId,
+        status: "delivering",
+        date: new Date().toString(),
+        courier: courier as "car" | "truck",
+        deliveryTime: getDeliveryTime(state.duration!.value),
+      };
+      dispatch(ADD_ORDER(newOrder));
 
       setTimeout(() => {
         // * this scope timeout assigned a driver to the pick up location
@@ -147,14 +158,27 @@ function OrderReech(props: PropsType) {
               currentLocation: state.origin!,
             },
           }));
-        }, 5000);
+        }, 2000);
       }, 2000);
     }, 4000);
   };
 
+  const cancelOrder = () => {
+    const { destroy, update } = Modal.confirm({
+      onOk: () => {
+        dispatch(CANCEL_ORDER(orderId));
+        props.setOpenOrder(false);
+      },
+      onCancel: () => destroy(),
+      title: "Are you sure you want to cancel order",
+      centered: true,
+      wrapClassName: "rounded-2xl shadow-lg !z-[999999999]",
+    });
+  };
+
   return (
     <motion.div
-      className="h-full overflow-hidden absolute z-[9999] bottom-0 shadow-2xl w-full bg-white rounded-t-2xl"
+      className="h-full overflow-hidden absolute z-[9999] bottom-0 shadow-2xl w-full bg-white"
       animate={{ y: 0 }}
       initial={{ y: 500 }}
       exit={{ y: 500 }}
@@ -178,14 +202,34 @@ function OrderReech(props: PropsType) {
         </motion.div>
       )}
       <div className="wrapper h-full overflow-auto pb-20">
-        <div className="close-btn-wrap pt-3 sticky top-0 z-[9999] bg-white flex justify-end px-3">
-          <Button
-            type="ghost"
-            onClick={() => props.setOpenOrder(false)}
-            className="rounded-lg shadow-lg text-primary mb-3"
-          >
-            Cancel
-          </Button>
+        <div className="head bg-gray-100 pt-3 items-center sticky top-0 z-[9999] flex justify-between px-3">
+          <span className="title font-extrabold text-lg uppercase">
+            Complete Order
+          </span>
+          <div className="flex gap-x-3">
+            {state.driverDetails?.status && (
+              <motion.div
+                whileTap={{ scale: 0.9 }}
+                initial={{ y: "-100%" }}
+                animate={{ y: 0 }}
+              >
+                <Button
+                  onClick={() => navigate("/track-delivery", { replace: true })}
+                  type="ghost"
+                  className="rounded-lg shadow-lg bg-secondary text-black  mb-3"
+                >
+                  Track
+                </Button>
+              </motion.div>
+            )}
+            <Button
+              type="ghost"
+              onClick={cancelOrder}
+              className="rounded-lg shadow-lg text-primary  mb-3"
+            >
+              Cancel
+            </Button>
+          </div>
         </div>
         <div className="map-snapshot">
           <GoogleMap
@@ -238,7 +282,7 @@ function OrderReech(props: PropsType) {
             <Icon
               icon={VehicleIcon[courier as "car" | "truck"]}
               height={24}
-              className="text-green-700"
+              className="text-green-700 min-w-max"
             />
             <span>{pickupLocation.description}</span>
           </div>
@@ -247,7 +291,7 @@ function OrderReech(props: PropsType) {
             <Icon
               icon={VehicleIcon[courier as "car" | "truck"]}
               height={24}
-              className="text-red-700"
+              className="text-red-700 min-w-max"
             />
             <span>{deliveryLocation.description}</span>
           </div>
@@ -259,7 +303,7 @@ function OrderReech(props: PropsType) {
                 Estimated Travel time:{" "}
               </span>{" "}
               <span>{state.duration?.text}</span>
-              <span className="shadow-xl bg-primary font-bold text-xs rounded-2xl p-2 ml-3">
+              <span className="shadow-xl justify-self-end text-primary font-bold text-[8px] ml-1">
                 {state.distance?.text}
               </span>
             </div>
@@ -270,17 +314,11 @@ function OrderReech(props: PropsType) {
               <span>
                 {" "}
                 between
-                {format(
-                  moment().add(state.duration!.value!, "s").toDate(),
-                  " h:mm a"
-                )}
-                <b className="mx-2 font-extrabold">⇀</b>
-                {format(
-                  moment()
-                    .add(state.duration!.value! + 60 * 60, "s")
-                    .toDate(),
-                  " h:mm a"
-                )}
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: getDeliveryTime(state.duration!.value),
+                  }}
+                />
               </span>
             </div>
             <div className="weight" aria-describedby="weigh">
@@ -315,7 +353,7 @@ function OrderReech(props: PropsType) {
                     (state.distance!.value / 1000) *
                       (weight.value * type.charge) +
                     state.duration!.value +
-                    500
+                    state.duration!.value / 2.5
                   ).toLocaleString("en")}
                 </span>
               </span>
@@ -419,6 +457,17 @@ function OrderReech(props: PropsType) {
     </motion.div>
   );
 }
+
+const getDeliveryTime = (value: number) => `${format(
+  moment().add(value, "s").toDate(),
+  " h:mm a"
+)} <b className="mx-2 font-extrabold">⇀</b>
+${format(
+  moment()
+    .add(value + 60 * 60, "s")
+    .toDate(),
+  " h:mm a"
+)}`;
 
 const mapOptions = {
   mapTypeControl: false,

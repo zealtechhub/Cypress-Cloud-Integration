@@ -1,5 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { Navigate } from "react-router";
+import { useAppSelector } from "@lib/redux/store";
 
 ProtectedRoute.propTypes = {
   name: PropTypes.string,
@@ -10,7 +12,9 @@ interface ProtectedRouteInterface {
 }
 
 function ProtectedRoute(props: ProtectedRouteInterface) {
-  console.debug("Protected Route");
+  const user = useAppSelector((state) => state.sessionStore.user);
+  if (!user) return <Navigate to="/auth" replace />;
+
   return <>{props.children}</>;
 }
 

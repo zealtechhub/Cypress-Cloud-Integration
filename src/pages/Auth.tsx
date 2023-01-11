@@ -11,9 +11,15 @@ import { Icon } from "@iconify/react";
 import SelectCountry, {
   SelectCountryModalRefObject,
 } from "@comps/auth/SelectCountryModal";
-import VerifyOtp from "src/components/auth/VerifyOtp";
-import CompleteDetails from "src/components/auth/CompleteDetails";
+import VerifyOtp from "@comps/auth/VerifyOtp";
+import CompleteDetails from "@comps/auth/CompleteDetails";
 import FadeTransition from "@comps/animations/FadeTransition";
+import { PatternFormat } from "react-number-format";
+import Loading from "@comps/Loading";
+import { useAppDispatch } from "@lib/redux/store";
+import { USER } from "@lib/redux/userSlice";
+import Password from "@comps/auth/Password";
+import useFetch from "src/hooks/useFetch";
 
 type FormDataType = {
   Name: string;
@@ -36,47 +42,37 @@ function CreateAccount() {
     dial_code: "+234",
   });
 
-  const [loading, setLoading] = React.useState(false);
-  const [messageApi, contextHolder] = message.useMessage();
+  const { fetching, userRegistered, sendCode } = useFetch();
   const navigate = useNavigate();
-  const [phone, setPhone] = React.useState<string>("");
+  const [phone, setPhone] = React.useState<string>(
+    sessionStorage.getItem("phone") as string
+  );
   const [phoneError, setPhoneError] = React.useState<boolean>(false);
 
   const selectCountryRef = React.useRef<SelectCountryModalRefObject>(null);
 
   const submit = async (e: React.FormEvent) => {
-    return navigate("verify-otp");
-    // if (loading)
-    //   return messageApi.open({
-    //     type: "info",
-    //     content: "There is a pending request",
-    //   });
+    e.preventDefault();
 
-    // setLoading(true);
+    // * response should have object {isRegistered: true}
+    const isRegistered = await userRegistered(phone);
 
-    // const send = await fetch("https://node.wizarphics.com/users/sendOtp/", {
-    //   method: "POST",
-    //   body: JSON.stringify(data),
-    //   headers: {
-    //     Accept: "application/json",
-    //   },
-    //   redirect: "follow",
-    // });
+    // * redirect to verifyPage if no user is found with the number
+    // * if no user is found that means the user wants to create and the number provided needs to be verified.
 
-    // const response = await send.json();
+    if (!isRegistered) {
+      // let userPhone = (
+      //   country.dial_code + (phone[0] === "0" ? phone.slice(1) : phone)
+      // ).replaceAll(" ", "");
 
-    // messageApi.open({
-    //   type: response.success ? "success" : "error",
-    //   content: response.success
-    //     ? "Account Created Successfully"
-    //     : response.message,
-    // });
+      // const { success, message, error } = await sendCode(userPhone);
+      // console.log({ success, message, error });
+      return navigate("verify-otp");
+    }
 
-    // if (response.success) {
-    //   setTimeout(() => {
-    //     navigate("/sign-in", { replace: true });
-    //   }, 3000);
-    // } else setLoading(false);
+    // * user has already registered and needs to enter his/her password to gain access
+    sessionStorage.setItem("phone", phone);
+    navigate("password");
   };
 
   const location = useLocation();
@@ -87,19 +83,23 @@ function CreateAccount() {
     },
     {
       path: "/verify-otp",
-      element: <VerifyOtp {...{ messageApi }} />,
+      element: <VerifyOtp />,
+    },
+    {
+      path: "/password",
+      element: <Password phone={phone} />,
     },
     {
       path: "/complete-details",
-      element: <CompleteDetails phone={phone} />,
+      element: <CompleteDetails {...{ phone, country }} />,
     },
   ]);
 
   return (
     <>
       <FadeTransition>
-        <div className="create-account-wrapper relative h-full">
-          {contextHolder}
+        <div className="auth-wrapper relative h-full">
+          {fetching && <Loading text="Checking Number Validation" />}
           <SelectCountry ref={selectCountryRef} setCountry={setCountry} />
           <motion.img
             src={BgImage}
@@ -116,33 +116,39 @@ function CreateAccount() {
               <label htmlFor="deliverTo" className="block font-semibold mb-1">
                 Phone number
               </label>
-              <Input
-                size="large"
-                className="rounded-lg shadow-lg [&_input]:rounded-tr-lg [&_input]:rounded-br-lg [&_.ant-input-group-addon]:px-0 [&_.ant-input-group-addon]:rounded-tl-lg [&_.ant-input-group-addon]:rounded-bl-lg"
-                placeholder="Enter Phone no."
-                addonBefore={
+              <div className="form-control flex bg-gray-200 shadow-lg rounded-xl">
+                <AnimatePresence mode="wait">
                   <motion.div
                     key={country.dial_code}
                     initial={{ y: -30 }}
                     animate={{ y: 0 }}
+                    exit={{ y: 30, opacity: 0, transition: { duration: 0.1 } }}
                     onClick={() => selectCountryRef.current?.openModal(country)}
-                    className="min-w-[90px] cursor-pointer px-3 flex items-center justify-center"
+                    className="cursor-pointer p-3 gap-x-2 flex items-center justify-center"
                   >
                     <motion.img
-                      animate={{ x: -10 }}
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1, transition: { delay: 0.4 } }}
                       src={"/flags/" + country.code + ".png"}
                       className="h-5 w-6 rounded-lg shadow-2xl ring-4 ring-secondary/50"
                     />
                     <span className="font-bold">{country.dial_code}</span>
                   </motion.div>
-                }
-                status={phoneError ? "error" : undefined}
-                onChange={(e) => setPhone(e.target.value)}
-              />
+                </AnimatePresence>
+                <PatternFormat
+                  className="rounded-r-lg p-3 flex-grow outline-none focus:ring-2 focus:ring-secondary/50 transition-all"
+                  placeholder="Enter Phone no."
+                  value={phone}
+                  format="#### ### ####"
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                  }}
+                />
+              </div>
             </div>
             <Button
-              loading={loading}
-              disabled={loading || !phone}
+              loading={fetching}
+              disabled={fetching || !phone}
               type="primary"
               htmlType="submit"
               size="large"
