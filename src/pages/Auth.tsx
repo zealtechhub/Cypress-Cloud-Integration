@@ -60,6 +60,7 @@ function CreateAccount() {
     // * redirect to verifyPage if no user is found with the number
     // * if no user is found that means the user wants to create and the number provided needs to be verified.
 
+    sessionStorage.setItem("phone", phone);
     if (!isRegistered) {
       // let userPhone = (
       //   country.dial_code + (phone[0] === "0" ? phone.slice(1) : phone)
@@ -71,7 +72,7 @@ function CreateAccount() {
     }
 
     // * user has already registered and needs to enter his/her password to gain access
-    sessionStorage.setItem("phone", phone);
+
     navigate("password");
   };
 
