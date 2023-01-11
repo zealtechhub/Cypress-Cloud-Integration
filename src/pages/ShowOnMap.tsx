@@ -8,12 +8,9 @@ import { Input } from "antd";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import Button from "antd/lib/button";
-import {
-  AutoCompleteClassName,
-  HandleLocationSearch,
-  PlaceResult,
-} from "@comps/dashboard/AddressPicker";
+import { HandleLocationSearch, PlaceResult } from "@lib/types";
 import { LocationType, VehicleIcon } from "@lib/constants";
+import { AutoCompleteClassName } from "@comps/dashboard/AddressPicker";
 
 type showMapOptions = {
   places: google.maps.GeocoderResult[];
