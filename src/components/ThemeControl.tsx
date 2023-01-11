@@ -4,9 +4,10 @@ import { IconButton } from "@mui/material";
 import { Dropdown, MenuProps } from "antd";
 import { ItemType } from "antd/es/menu/hooks/useItems";
 import { useAppDispatch, useAppSelector } from "@lib/redux/store";
-import { MODE, stateInterface } from "@lib/redux/userSlice";
+import { MODE } from "@lib/redux/userSlice";
 import { nanoid } from "@reduxjs/toolkit";
 import { AnimatePresence, motion } from "framer-motion";
+import { stateInterface } from "@lib/types";
 
 const Icons = {
   default: "mdi:theme-light-dark",
