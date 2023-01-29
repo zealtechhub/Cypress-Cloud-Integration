@@ -12,7 +12,7 @@ jobs:
 
       - name: Install Serve
         # install serve to start a server
-        run: yarn add -g serve
+        run: yarn global add serve
 
       - name: Build
         uses: cypress-io/github-action@v5.0.5
