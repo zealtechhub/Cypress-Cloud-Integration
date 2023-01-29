@@ -1,12 +1,12 @@
 import React from "react";
-import GoBack from "@comps/GoBack";
-import SlideTransition from "@comps/animations/SlideTransition";
+import GoBack from "src/components/GoBack";
+import SlideTransition from "src/components/animations/SlideTransition";
 import { Segmented } from "antd";
 import SwipeableViews from "react-swipeable-views";
 
-import EmptyComponent from "@comps/Empty";
-import { useAppSelector } from "@lib/redux/store";
-import OrderComponent from "@comps/Order";
+import EmptyComponent from "src/components/Empty";
+import { useAppSelector } from "src/lib/redux/store";
+import OrderComponent from "src/components/Order";
 
 function TrackDelivery() {
   const [unMount, setUnMount] = React.useState(false);

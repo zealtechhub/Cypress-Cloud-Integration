@@ -7,7 +7,7 @@ import { CardActionArea, IconButton, SwipeableDrawer } from "@mui/material";
 import { Avatar, Dropdown } from "antd";
 
 // assets
-import ProfileImage from "@assets/profile.jpg";
+import ProfileImage from "src/assets/profile.jpg";
 import ThemeControl from "./ThemeControl";
 
 function AppDrawer() {

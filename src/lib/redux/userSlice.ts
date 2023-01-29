@@ -1,4 +1,4 @@
-import { Order, stateInterface } from "@lib/types";
+import { Order, stateInterface } from "src/lib/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import cookie from "js-cookie";
 

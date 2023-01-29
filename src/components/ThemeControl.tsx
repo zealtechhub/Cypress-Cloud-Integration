@@ -3,11 +3,11 @@ import { Icon } from "@iconify/react";
 import { IconButton } from "@mui/material";
 import { Dropdown, MenuProps } from "antd";
 import { ItemType } from "antd/es/menu/hooks/useItems";
-import { useAppDispatch, useAppSelector } from "@lib/redux/store";
-import { MODE } from "@lib/redux/userSlice";
+import { useAppDispatch, useAppSelector } from "src/lib/redux/store";
+import { MODE } from "src/lib/redux/userSlice";
 import { nanoid } from "@reduxjs/toolkit";
 import { AnimatePresence, motion } from "framer-motion";
-import { stateInterface } from "@lib/types";
+import { stateInterface } from "src/lib/types";
 
 const Icons = {
   default: "mdi:theme-light-dark",

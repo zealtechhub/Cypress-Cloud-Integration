@@ -5,11 +5,11 @@ import { ConfigProvider } from "antd";
 import { AnimatePresence } from "framer-motion";
 
 // Pages
-import Home from "@pages/Home";
-import Auth from "@pages/Auth";
-import ProtectedRoute from "@comps/ProtectedRoute";
+import Home from "src/pages/Home";
+import Auth from "src/pages/Auth";
+import ProtectedRoute from "src/components/ProtectedRoute";
 import MediaControl from "./MediaControl";
-import { useAppSelector } from "@lib/redux/store";
+import { useAppSelector } from "src/lib/redux/store";
 
 function Layout() {
   const user = useAppSelector((state) => state.sessionStore.user);

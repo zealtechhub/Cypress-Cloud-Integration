@@ -1,6 +1,6 @@
 import React from "react";
-import GoBack from "@comps/GoBack";
-import SlideTransition from "@comps/animations/SlideTransition";
+import GoBack from "src/components/GoBack";
+import SlideTransition from "src/components/animations/SlideTransition";
 import { Input, Select } from "antd";
 
 function Payment() {

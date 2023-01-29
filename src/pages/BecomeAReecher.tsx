@@ -1,10 +1,10 @@
-import GoBack from "@comps/GoBack";
-import SlideTransition from "@comps/animations/SlideTransition";
+import GoBack from "src/components/GoBack";
+import SlideTransition from "src/components/animations/SlideTransition";
 import React from "react";
 import { motion } from "framer-motion";
 
 // asset
-import SpiralImage from "@assets/Spiral.png";
+import SpiralImage from "src/assets/Spiral.png";
 import Button from "antd/lib/button";
 
 function BecomeAReecher() {

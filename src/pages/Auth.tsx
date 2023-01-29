@@ -1,24 +1,20 @@
 import React from "react";
 import Button from "antd/lib/button";
-import { useForm } from "react-hook-form";
-import Input from "antd/lib/input";
 import { useLocation, useNavigate, useRoutes } from "react-router-dom";
-import { Divider, message } from "antd";
+import { Divider } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
 
 import BgImage from "../assets/create-account-image.jpg";
 import { Icon } from "@iconify/react";
 import SelectCountry, {
   SelectCountryModalRefObject,
-} from "@comps/auth/SelectCountryModal";
-import VerifyOtp from "@comps/auth/VerifyOtp";
-import CompleteDetails from "@comps/auth/CompleteDetails";
-import FadeTransition from "@comps/animations/FadeTransition";
+} from "src/components/auth/SelectCountryModal";
+import VerifyOtp from "src/components/auth/VerifyOtp";
+import CompleteDetails from "src/components/auth/CompleteDetails";
+import FadeTransition from "src/components/animations/FadeTransition";
 import { PatternFormat } from "react-number-format";
-import Loading from "@comps/Loading";
-import { useAppDispatch } from "@lib/redux/store";
-import { USER } from "@lib/redux/userSlice";
-import Password from "@comps/auth/Password";
+import Loading from "src/components/Loading";
+import Password from "src/components/auth/Password";
 import useFetch from "src/hooks/useFetch";
 
 type FormDataType = {
@@ -94,7 +90,7 @@ function CreateAccount() {
       path: "/complete-details",
       element: <CompleteDetails {...{ phone, country }} />,
     },
-  ]);
+  ]) ?? <></>;
 
   return (
     <>
@@ -125,7 +121,7 @@ function CreateAccount() {
                     animate={{ y: 0 }}
                     exit={{ y: 30, opacity: 0, transition: { duration: 0.1 } }}
                     onClick={() => selectCountryRef.current?.openModal(country)}
-                    className="cursor-pointer p-3 gap-x-2 flex items-center justify-center"
+                    className="select-toggler cursor-pointer p-3 gap-x-2 flex items-center justify-center"
                   >
                     <motion.img
                       initial={{ x: -20, opacity: 0 }}
@@ -171,22 +167,6 @@ function CreateAccount() {
               If you are creating a new account, Terms & Conditions and Privacy
               policy apllies
             </div>
-            {/* <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              transition: { delay: 0.3, staggerChildren: 0.3 },
-            }}
-            className="flex gap-3"
-          >
-            Already have an account ?
-            <NavLink to={"/sign-in"} className="inline">
-              <motion.span animate className="inline font-semibold">
-                Sign In
-              </motion.span>
-            </NavLink>
-          </motion.div> */}
           </motion.form>
         </div>
       </FadeTransition>

@@ -1,5 +1,5 @@
 import { Image } from "antd";
-import EmptyImage from "@assets/empty.png";
+import EmptyImage from "src/assets/empty.png";
 
 function EmptyComponent(props: { title: string }) {
   return (

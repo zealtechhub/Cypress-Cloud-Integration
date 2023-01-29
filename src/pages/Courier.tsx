@@ -1,4 +1,4 @@
-import SlideTransition from "@comps/animations/SlideTransition";
+import SlideTransition from "src/components/animations/SlideTransition";
 import React from "react";
 
 function Courier() {

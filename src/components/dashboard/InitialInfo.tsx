@@ -4,8 +4,8 @@ import { Button, Input, message } from "antd";
 import { useNavigate, useRoutes } from "react-router-dom";
 import CheckPrice from "./CheckPrice";
 import { Icon } from "@iconify/react";
-import { useAppDispatch, useAppSelector } from "@lib/redux/store";
-import { INFO } from "@lib/redux/userSlice";
+import { useAppDispatch, useAppSelector } from "src/lib/redux/store";
+import { INFO } from "src/lib/redux/userSlice";
 
 function InitialInfo() {
   const storedCourier = useAppSelector(

@@ -4,11 +4,11 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 // import { motion } from "framer-motion";
 import stringToColor from "src/lib/stringToColor";
 import { useAppSelector } from "src/lib/redux/store";
-import GoBack from "@comps/GoBack";
-import SlideTransition from "@comps/animations/SlideTransition";
+import GoBack from "src/components/GoBack";
+import SlideTransition from "src/components/animations/SlideTransition";
 
 // assets
-import ProfileImage from "@assets/profile.jpg";
+import ProfileImage from "src/assets/profile.jpg";
 import { IconButton } from "@mui/material";
 import { Icon } from "@iconify/react";
 

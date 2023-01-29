@@ -3,9 +3,9 @@ import { Button, Dropdown, Input } from "antd";
 import { AnimatePresence, motion, MotionProps } from "framer-motion";
 import React from "react";
 import { Icon } from "@iconify/react";
-import Loading from "@comps/Loading";
-import { useAppSelector } from "@lib/redux/store";
-import { LocationSearchPropsType, PlaceResult } from "@lib/types";
+import Loading from "src/components/Loading";
+import { useAppSelector } from "src/lib/redux/store";
+import { LocationSearchPropsType, PlaceResult } from "src/lib/types";
 
 function LocationSearch(props: LocationSearchPropsType) {
   const { search, handleLocationSearch, setValue, showMapRef } = props;

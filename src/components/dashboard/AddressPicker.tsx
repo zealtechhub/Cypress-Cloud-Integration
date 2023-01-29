@@ -3,13 +3,13 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Icon } from "@iconify/react";
 import LocationSearch from "./LocationSearch";
-import ShowOnMap, { ShowMapRefObject } from "@pages/ShowOnMap";
+import ShowOnMap, { ShowMapRefObject } from "src/pages/ShowOnMap";
 import {
   AddressPropsType,
   HandleLocationSearch,
   PlaceResult,
   SearchType,
-} from "@lib/types";
+} from "src/lib/types";
 
 function AddressPicker(props: AddressPropsType) {
   const { pickupLocation, deliveryLocation, setValue, errors } = props;

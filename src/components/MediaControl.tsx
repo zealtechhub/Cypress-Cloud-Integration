@@ -1,5 +1,5 @@
-import { useAppDispatch, useAppSelector } from "@lib/redux/store";
-import { RESIZE } from "@lib/redux/userSlice";
+import { useAppDispatch, useAppSelector } from "src/lib/redux/store";
+import { RESIZE } from "src/lib/redux/userSlice";
 import React from "react";
 
 function MediaControl() {

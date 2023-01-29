@@ -6,16 +6,16 @@ import Map from "../components/dashboard/Map";
 import InitialInfo from "../components/dashboard/InitialInfo";
 import { AnimatePresence } from "framer-motion";
 import { useRoutes } from "react-router";
-import BecomeAReecher from "@pages/BecomeAReecher";
-import TrackDelivery from "@pages/TrackDelivery";
-import Payment from "@pages/Payment";
-import Logout from "@pages/Logout";
-import Help from "@pages/Help";
-import Profile from "@pages/Profile";
-import AppDrawer from "@comps/AppDrawer";
+import BecomeAReecher from "src/pages/BecomeAReecher";
+import TrackDelivery from "src/pages/TrackDelivery";
+import Payment from "src/pages/Payment";
+import Logout from "src/pages/Logout";
+import Help from "src/pages/Help";
+import Profile from "src/pages/Profile";
+import AppDrawer from "src/components/AppDrawer";
 
 // styles
-import "@styles/dashboard.sass";
+import "src/styles/dashboard.sass";
 
 export const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 export const render = (status: Status) => {

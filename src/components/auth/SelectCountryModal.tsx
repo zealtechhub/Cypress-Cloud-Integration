@@ -1,7 +1,7 @@
 import React from "react";
 import { AnimatePresence, motion, Transition } from "framer-motion";
-import { Country } from "@pages/Auth";
-import Countries from "@lib/countries";
+import { Country } from "src/pages/Auth";
+import Countries from "src/lib/countries";
 import { nanoid } from "@reduxjs/toolkit";
 import useMeasure from "react-use-measure";
 

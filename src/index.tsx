@@ -10,7 +10,7 @@ import "./index.css";
 import "antd/dist/reset.css";
 
 // layout
-import Layout from "@comps/Layout";
+import Layout from "src/components/Layout";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLDivElement

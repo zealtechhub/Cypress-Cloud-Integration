@@ -1,5 +1,5 @@
 import React from "react";
-import SlideTransition from "@comps/animations/SlideTransition";
+import SlideTransition from "src/components/animations/SlideTransition";
 import { Spin } from "antd";
 
 function Loading({

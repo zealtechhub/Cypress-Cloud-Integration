@@ -2,8 +2,8 @@ import React from "react";
 import { Button } from "antd";
 import { Icon } from "@iconify/react";
 import { format } from "date-fns";
-import { VehicleIcon } from "@lib/constants";
-import { Order as OrderType } from "@lib/types";
+import { VehicleIcon } from "src/lib/constants";
+import { Order as OrderType } from "src/lib/types";
 
 function Order(props: { order: OrderType }) {
   const order = props.order;

@@ -2,8 +2,8 @@ import React from "react";
 import { AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router";
 import Loading from "../Loading";
-import SlideTransition from "@comps/animations/SlideTransition";
-import GoBack from "@comps/GoBack";
+import SlideTransition from "src/components/animations/SlideTransition";
+import GoBack from "src/components/GoBack";
 import { message } from "antd";
 
 function VerifyOtp() {

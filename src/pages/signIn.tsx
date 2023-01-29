@@ -5,8 +5,8 @@ import { InputNumber, Divider, message } from "antd";
 import Input from "antd/lib/input";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useAppDispatch } from "@lib/redux/store";
-import { USER } from "@lib/redux/userSlice";
+import { useAppDispatch } from "src/lib/redux/store";
+import { USER } from "src/lib/redux/userSlice";
 
 type SignFormData = {
   phone_email: string;

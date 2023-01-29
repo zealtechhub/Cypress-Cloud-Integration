@@ -7,13 +7,13 @@ import { useForm } from "react-hook-form";
 import { Checkbox, Divider, message, notification, Radio, Space } from "antd";
 import { Icon } from "@iconify/react";
 import Loading from "../Loading";
-import SlideTransition from "@comps/animations/SlideTransition";
-import GoBack from "@comps/GoBack";
+import SlideTransition from "src/components/animations/SlideTransition";
+import GoBack from "src/components/GoBack";
 import useFetch from "src/hooks/useFetch";
 import { PatternFormat } from "react-number-format";
-import { Country } from "@pages/Auth";
-import { useAppDispatch } from "@lib/redux/store";
-import { USER } from "@lib/redux/userSlice";
+import { Country } from "src/pages/Auth";
+import { useAppDispatch } from "src/lib/redux/store";
+import { USER } from "src/lib/redux/userSlice";
 
 export type FormDataType = {
   name: string;

@@ -1,7 +1,7 @@
-import { itemTypes } from "@lib/constants";
+import { itemTypes } from "src/lib/constants";
 import { FormState } from "react-hook-form";
 import React from "react";
-import { ShowMapRefObject } from "@pages/ShowOnMap";
+import { ShowMapRefObject } from "src/pages/ShowOnMap";
 
 export interface stateInterface {
   loggedIn: boolean;

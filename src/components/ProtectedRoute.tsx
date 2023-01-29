@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Navigate } from "react-router";
-import { useAppSelector } from "@lib/redux/store";
+import { useAppSelector } from "src/lib/redux/store";
 
 ProtectedRoute.propTypes = {
   name: PropTypes.string,

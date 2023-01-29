@@ -34,6 +34,7 @@
     "react-country-select": "^1.0.5",
     "react-dom": "^18.2.0",
     "react-google-autocomplete": "^2.7.0",
+    "react-google-maps": "^9.4.5",
     "react-hook-form": "^7.38.0",
     "react-number-format": "^5.1.3",
     "react-redux": "^8.0.5",
@@ -52,7 +53,10 @@
     "dev": "vite --host",
     "build": "tsc && vite build",
     "serve": "vite preview",
-    "server": "nodemon server.js"
+    "server": "nodemon server.js",
+    "cy:open": "NODE_ENV=development cypress open",
+    "cy:run": "cypress run",
+    "cy:comp": "cypress run --component"
   },
   "eslintConfig": {
     "extends": [
@@ -60,13 +64,31 @@
       "react-app/jest"
     ]
   },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^15.1.2",
+    "@cypress/webpack-dev-server": "^3.2.2",
+    "@cypress/webpack-preprocessor": "^5.16.1",
+    "@testing-library/cypress": "^9.0.0",
     "@types/jquery": "^3.5.14",
     "@types/js-cookie": "^3.0.2",
     "@types/jsonwebtoken": "^8.5.9",
     "@types/react-swipeable-views": "^0.13.1",
     "@vitejs/plugin-react": "^2.2.0",
+    "cypress": "^12.3.0",
     "tailwindcss": "^3.2.1",
+    "tsconfig-paths": "^4.1.2",
     "vite": "^3.2.4",
     "vite-plugin-svgr": "^2.2.2",
     "vite-tsconfig-paths": "^3.6.0"

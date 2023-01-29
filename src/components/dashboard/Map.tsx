@@ -2,7 +2,7 @@ import React from "react";
 import { Status, Wrapper } from "@googlemaps/react-wrapper";
 import { Icon } from "@iconify/react";
 import { IconButton } from "@mui/material";
-import { useAppSelector } from "@lib/redux/store";
+import { useAppSelector } from "src/lib/redux/store";
 
 interface MapProps extends google.maps.MapOptions {
   className?: string;

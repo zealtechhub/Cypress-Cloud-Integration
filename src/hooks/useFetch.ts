@@ -1,5 +1,5 @@
-import { FormDataType } from "@comps/auth/CompleteDetails";
-import { User } from "@lib/types";
+import { FormDataType } from "src/components/auth/CompleteDetails";
+import { User } from "src/lib/types";
 import { message } from "antd";
 import React from "react";
 

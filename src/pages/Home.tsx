@@ -4,14 +4,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Carousel } from "react-responsive-carousel";
 
 // pages
-import Dashboard from "@pages/dashboard";
+import Dashboard from "src/pages/dashboard";
 
 // styles
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import LandingView from "@comps/LandingView";
+import LandingView from "src/components/LandingView";
 import { Button, Divider } from "antd";
 import { NavLink } from "react-router-dom";
-import SlideTransition from "@comps/animations/SlideTransition";
+import SlideTransition from "src/components/animations/SlideTransition";
 
 const Colors = ["rgba(255,0,0,.5)", "rgba(0,154,73,0.5)", "rgba(12,0,88,0.5)"];
 

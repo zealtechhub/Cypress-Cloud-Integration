@@ -1,16 +1,16 @@
 import React from "react";
 import { Wrapper } from "@googlemaps/react-wrapper";
-import Map from "@comps/dashboard/Map";
-import SlideTransition from "@comps/animations/SlideTransition";
-import GoBack from "@comps/GoBack";
+import Map from "src/components/dashboard/Map";
+import SlideTransition from "src/components/animations/SlideTransition";
+import GoBack from "src/components/GoBack";
 import { GOOGLE_API_KEY, render } from "./dashboard";
 import { Input } from "antd";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import Button from "antd/lib/button";
-import { HandleLocationSearch, PlaceResult } from "@lib/types";
-import { LocationType, VehicleIcon } from "@lib/constants";
-import { AutoCompleteClassName } from "@comps/dashboard/AddressPicker";
+import { HandleLocationSearch, PlaceResult } from "src/lib/types";
+import { LocationType, VehicleIcon } from "src/lib/constants";
+import { AutoCompleteClassName } from "src/components/dashboard/AddressPicker";
 
 type showMapOptions = {
   places: google.maps.GeocoderResult[];

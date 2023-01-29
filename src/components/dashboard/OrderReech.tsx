@@ -2,18 +2,27 @@ import React from "react";
 import { AnimatePresence, Transition, motion } from "framer-motion";
 import { Button, Image, Modal, Spin } from "antd";
 import { Icon } from "@iconify/react";
-import { useAppDispatch, useAppSelector } from "@lib/redux/store";
-import { VehicleIcon, VehicleIconLinks, driverDetails } from "@lib/constants";
+import { useAppDispatch, useAppSelector } from "src/lib/redux/store";
+import {
+  VehicleIcon,
+  VehicleIconLinks,
+  driverDetails,
+} from "src/lib/constants";
 import { GoogleMap, Marker, DirectionsRenderer } from "@react-google-maps/api";
 import { format } from "date-fns";
 import moment from "moment";
-import { getGeocode } from "@lib/helpers";
+import { getGeocode } from "src/lib/helpers";
 
 // @asset
-import DriverImage from "@assets/profile.jpg";
-import { DriverDetails, FormFields, Order, OrderStateType } from "@lib/types";
+import DriverImage from "src/assets/profile.jpg";
+import {
+  DriverDetails,
+  FormFields,
+  Order,
+  OrderStateType,
+} from "src/lib/types";
 import { useNavigate } from "react-router";
-import { ADD_ORDER, CANCEL_ORDER, UPDATE_ORDER } from "@lib/redux/userSlice";
+import { ADD_ORDER, CANCEL_ORDER, UPDATE_ORDER } from "src/lib/redux/userSlice";
 import { nanoid } from "@reduxjs/toolkit";
 
 type PropsType = {

@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import DriverImage from "@assets/profile.jpg";
+import DriverImage from "src/assets/profile.jpg";
 import { DriverDetails } from "./types";
 export const VehicleIcon = {
   car: "game-icons:city-car",

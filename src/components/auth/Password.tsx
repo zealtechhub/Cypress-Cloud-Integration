@@ -1,12 +1,12 @@
-import SlideTransition from "@comps/animations/SlideTransition";
+import SlideTransition from "src/components/animations/SlideTransition";
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import Loading from "@comps/Loading";
-import GoBack from "@comps/GoBack";
-import { USER } from "@lib/redux/userSlice";
+import Loading from "src/components/Loading";
+import GoBack from "src/components/GoBack";
+import { USER } from "src/lib/redux/userSlice";
 import { Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "@lib/redux/store";
+import { useAppDispatch } from "src/lib/redux/store";
 import Button from "antd/lib/button";
 import JQuery from "jquery";
 import useFetch from "src/hooks/useFetch";

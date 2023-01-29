@@ -1,21 +1,21 @@
 import React from "react";
-import { useAppDispatch, useAppSelector } from "@lib/redux/store";
+import { useAppDispatch, useAppSelector } from "src/lib/redux/store";
 import { useForm } from "react-hook-form";
-import { INFO } from "@lib/redux/userSlice";
+import { INFO } from "src/lib/redux/userSlice";
 
 // * components
 import { AnimatePresence, motion } from "framer-motion";
 import Button from "antd/lib/button";
 import { Divider, Input, Radio, Select, message } from "antd";
 import AddressPicker from "./AddressPicker";
-import SlideTransition from "@comps/animations/SlideTransition";
-import GoBack from "@comps/GoBack";
+import SlideTransition from "src/components/animations/SlideTransition";
+import GoBack from "src/components/GoBack";
 import { IconsComp } from "./InitialInfo";
-import { itemTypes, paymentOptions, weights } from "@lib/constants";
+import { itemTypes, paymentOptions, weights } from "src/lib/constants";
 import OrderReech from "./OrderReech";
 
 // * libraries types
-import { FormFields } from "@lib/types";
+import { FormFields } from "src/lib/types";
 
 function CheckPrice() {
   const courier = useAppSelector((state) => state.sessionStore.info.courier);
