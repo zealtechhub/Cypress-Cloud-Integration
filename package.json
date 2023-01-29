@@ -55,7 +55,7 @@
     "serve": "vite preview",
     "server": "nodemon server.js",
     "cy:open": "NODE_ENV=development cypress open",
-    "cy:run": "cypress run",
+    "cy:run": "cypress run --component",
     "cy:comp": "cypress run --component",
     "test": "cypress run --component"
   },
