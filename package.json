@@ -56,7 +56,8 @@
     "server": "nodemon server.js",
     "cy:open": "NODE_ENV=development cypress open",
     "cy:run": "cypress run",
-    "cy:comp": "cypress run --component"
+    "cy:comp": "cypress run --component",
+    "test": "cypress run --component"
   },
   "eslintConfig": {
     "extends": [
