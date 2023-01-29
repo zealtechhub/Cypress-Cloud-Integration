@@ -1,7 +1,7 @@
 const cypressConfig = {
   viewportWidth: 650,
   viewportHeight: 700,
-  projectId: "ugnaw1",
+  projectId: "uzc5bh",
   component: {
     // setupNodeEvents(on: any, config: any) {
     //   const webpack = require("@cypress/webpack-preprocessor");
