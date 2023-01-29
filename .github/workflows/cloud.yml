@@ -15,7 +15,7 @@ jobs:
         with:
           # Disable running of tests within install job
           build: yarn build
-          start: yarn preview
+          start: yarn serve
           wait-on: "http://localhost:4173"
           record: true
           parallel: true # Runs test in parallel using settings above
