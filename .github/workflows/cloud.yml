@@ -16,7 +16,7 @@ jobs:
           build: yarn build
 
       - name: Cypress install
-        uses: cypress-io/g3ithub-action@v5.0.5
+        uses: cypress-io/github-action@v5.0.5
         with:
           # Disable running of tests within install job
           start: yarn preview
