@@ -20,7 +20,7 @@ jobs:
         with:
           # Disable running of tests within install job
           start: yarn preview
-          waits-on: "http://localhost:4173"
+          wait-on: "http://localhost:4173"
           record: true
           parallel: true # Runs test in parallel using settings above
 
