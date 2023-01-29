@@ -4,7 +4,7 @@ import Wrapper from "../fixtures/Wrapper";
 describe("Authentication Component", () => {
   beforeEach(() => {
     // see: https://on.cypress.io/mounting-react
-    cy.visit("localhost:4173");
+    cy.visit("http://localhost:4173");
   });
 
   it("renders", () => {
