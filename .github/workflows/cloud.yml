@@ -10,21 +10,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install Serve
-        # install serve to start a server
-        run: yarn global add serve
-
       - name: Build
         uses: cypress-io/github-action@v5.0.5
         with:
           build: yarn build
 
       - name: Cypress install
-        uses: cypress-io/github-action@v5.0.5
+        uses: cypress-io/g3ithub-action@v5.0.5
         with:
           # Disable running of tests within install job
-          start: "serve ./dist"
-          waits-on: "http://localhost:3000"
+          start: yarn preview
+          waits-on: "http://localhost:4173"
           record: true
           parallel: true # Runs test in parallel using settings above
 
