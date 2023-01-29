@@ -1,6 +1,4 @@
-import path from "path";
-
-export default {
+const cypressConfig = {
   viewportWidth: 650,
   viewportHeight: 700,
   component: {
@@ -34,4 +32,11 @@ export default {
       bundler: "webpack",
     },
   },
+  e2e: {
+    setupNodeEvents(on: any, config: any) {
+      // implement node event listeners here
+    },
+  },
 };
+
+export default cypressConfig;
